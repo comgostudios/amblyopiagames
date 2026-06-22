@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Color Calibration</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: #333;
+        color: #e8eaf0;
+        font-family: sans-serif;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 48px;
+      }
+
+      h1 {
+        font-size: 1.4rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        color: #fff;
+      }
+
+      .swatches {
+        display: flex;
+        gap: 48px;
+        align-items: flex-start;
+      }
+
+      .swatch {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .swatch-box {
+        width: 64px;
+        height: 64px;
+      }
+
+      .swatch-label {
+        font-size: 0.85rem;
+        color: #8899bb;
+        text-align: center;
+      }
+
+      nav {
+        font-size: 0.9rem;
+      }
+
+      nav a {
+        color: #4fc3f7;
+        text-decoration: none;
+      }
+
+      nav a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Color Calibration</h1>
+
+    <div class="swatches">
+      <div class="swatch">
+        <div class="swatch-box" style="background: #c12020"></div>
+        <div class="swatch-label">Ball<br />#c12020</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-box" style="background: #167b7b"></div>
+        <div class="swatch-label">Paddle<br />#167b7b</div>
+      </div>
+    </div>
+
+    <nav><a href="/">&larr; Back to home</a></nav>
+  </body>
+</html>

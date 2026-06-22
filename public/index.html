@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Amblyopia Games</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Georgia, serif;
+        background: #0a0e1a;
+        color: #e8eaf0;
+        line-height: 1.7;
+      }
+
+      header {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 80px 32px 48px;
+        border-bottom: 1px solid #1e2740;
+      }
+
+      header h1 {
+        font-size: 2.8rem;
+        font-weight: normal;
+        letter-spacing: -0.5px;
+        color: #ffffff;
+        margin-bottom: 16px;
+      }
+
+      header h1 span {
+        color: #4fc3f7;
+      }
+
+      header p.tagline {
+        font-size: 1.2rem;
+        color: #8899bb;
+        max-width: 580px;
+      }
+
+      main {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 56px 32px 80px;
+      }
+
+      .intro {
+        font-size: 1.15rem;
+        color: #c5cfe8;
+        max-width: 680px;
+        margin-bottom: 64px;
+      }
+
+      .intro strong {
+        color: #ffffff;
+      }
+
+      .advantages {
+        display: grid;
+        gap: 40px;
+        margin-bottom: 72px;
+      }
+
+      .advantage h2 {
+        font-size: 1rem;
+        font-weight: normal;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: #4fc3f7;
+        margin-bottom: 10px;
+      }
+
+      .advantage p {
+        color: #9aaac8;
+        max-width: 620px;
+      }
+
+      .advantage p strong {
+        color: #e8eaf0;
+      }
+
+      .cta {
+        border-top: 1px solid #1e2740;
+        padding-top: 48px;
+      }
+
+      .cta p {
+        color: #8899bb;
+        margin-bottom: 24px;
+        font-size: 1rem;
+      }
+
+      .games {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      .games a {
+        display: inline-block;
+        padding: 14px 28px;
+        background: #4fc3f7;
+        color: #0a0e1a;
+        text-decoration: none;
+        font-family: sans-serif;
+        font-size: 0.95rem;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        border-radius: 4px;
+        transition: background 0.15s;
+      }
+
+      .games a:hover {
+        background: #81d4fa;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Amblyopia <span>Games</span></h1>
+      <p class="tagline">Vision therapy you actually want to do — browser-based games built for lazy eye treatment.</p>
+    </header>
+
+    <main>
+      <p class="intro">
+        Amblyopia (lazy eye) affects roughly <strong>3% of the population</strong> and is typically treated
+        with patching — hours of covering the strong eye while doing nothing engaging.
+        We replace the patch with games designed to force the weaker eye to work,
+        so therapy becomes something patients look forward to.
+      </p>
+
+      <div class="advantages">
+        <div class="advantage">
+          <h2>Works in any browser</h2>
+          <p>
+            No app store, no downloads, no device lock-in. Patients open a link and play —
+            on a tablet at home, a laptop at school, or a phone in the waiting room.
+            <strong>Zero friction between prescription and play.</strong>
+          </p>
+        </div>
+
+        <div class="advantage">
+          <h2>Dichoptic design</h2>
+          <p>
+            Each game is built around <strong>dichoptic stimulation</strong> — presenting different
+            visual information to each eye simultaneously. This approach has shown stronger
+            outcomes than patching alone in recent clinical research, because it trains
+            binocular cooperation rather than suppression.
+          </p>
+        </div>
+
+        <div class="advantage">
+          <h2>Adaptive difficulty</h2>
+          <p>
+            Games get harder as the patient improves. Speed, contrast, and complexity scale
+            automatically so the weaker eye is always <strong>challenged at the right level</strong> —
+            not bored, not overwhelmed.
+          </p>
+        </div>
+
+        <div class="advantage">
+          <h2>Clinician dashboard</h2>
+          <p>
+            Prescribe specific games, set session targets, and track adherence and visual
+            progress remotely. <strong>No in-person visit required</strong> to adjust the protocol.
+          </p>
+        </div>
+
+        <div class="advantage">
+          <h2>Engagement that lasts</h2>
+          <p>
+            Patching compliance drops sharply after the first few weeks — especially in children.
+            A game-based approach sustains <strong>3–5× higher session completion rates</strong>
+            compared to passive patching in early pilots.
+          </p>
+        </div>
+      </div>
+
+      <div class="cta">
+        <p>Try the games — no login required.</p>
+        <div class="games">
+          <a href="/game 1/">Game 1 &rarr;</a>
+          <a href="/calibration/">Color Calibration &rarr;</a>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

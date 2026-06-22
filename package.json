@@ -1,0 +1,10 @@
+{
+  "name": "amblyopia-games",
+  "version": "1.0.0",
+  "description": "Amblyopia Games website",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js"
+  },
+  "license": "ISC"
+}

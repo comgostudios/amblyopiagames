@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Game 1</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background: #555;
+        overflow: hidden;
+        cursor: none;
+      }
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="game"></canvas>
+    <script>
+      const canvas = document.getElementById("game");
+      const ctx = canvas.getContext("2d");
+
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener("resize", resize);
+
+      const W = () => canvas.width;
+      const H = () => canvas.height;
+
+      const PADDLE_WIDTH = 104;
+      const PADDLE_HEIGHT = 12;
+      const BALL_RADIUS = 14;
+      const CROSS_SECONDS = 2;
+
+      const paddle = { x: 0, y: 0, vx: 0 };
+      const mouse = { x: -100, y: -100 };
+      const ball = { x: 0, y: 0, vx: 0, vy: 0 };
+
+      // 'intro' | 'playing' | 'gameover'
+      let state = "intro";
+      let showCursor = true;
+      let score = 0;
+      let lastTime = null;
+      let opacity = 1;
+      let overlayOpacity = 1;
+
+      // Cursor toggle button rect, set each draw frame
+      const toggleBtn = { x: 0, y: 0, w: 220, h: 44 };
+
+
+      function resetBall() {
+        ball.x = W() / 2;
+        ball.y = H() * 0.4;
+        ball.vy = -(H() / CROSS_SECONDS);
+        ball.vx = (W() / CROSS_SECONDS) * 0.4 * (Math.random() < 0.5 ? 1 : -1);
+      }
+
+      function startGame() {
+        state = "playing";
+        score = 0;
+        opacity = 1;
+        overlayOpacity = 1;
+        paddle.x = W() / 2 - PADDLE_WIDTH / 2;
+        paddle.y = H() - 42;
+        paddle.vx = 0;
+        mouse.x = W() / 2;
+        mouse.y = H() / 2;
+        resetBall();
+        paused = false;
+        if (!showCursor) canvas.requestPointerLock();
+      }
+
+      // Mouse control
+      canvas.addEventListener("mousemove", (e) => {
+        if (document.pointerLockElement === canvas) {
+          mouse.x = Math.max(0, Math.min(W(), mouse.x + e.movementX));
+          mouse.y = Math.max(0, Math.min(H(), mouse.y + e.movementY));
+        } else {
+          mouse.x = e.clientX;
+          mouse.y = e.clientY;
+        }
+        if (state === "playing") paddle.x = mouse.x - PADDLE_WIDTH / 2;
+      });
+
+      // Touch control
+      canvas.addEventListener(
+        "touchmove",
+        (e) => {
+          e.preventDefault();
+          if (state === "playing")
+            paddle.x = e.touches[0].clientX - PADDLE_WIDTH / 2;
+        },
+        { passive: false },
+      );
+
+      // Keyboard control
+      const keys = new Set();
+      const ARROW_KEYS = new Set([
+        "ArrowLeft",
+        "ArrowRight",
+        "ArrowUp",
+        "ArrowDown",
+      ]);
+      window.addEventListener("keydown", (e) => {
+        keys.add(e.key);
+        if (ARROW_KEYS.has(e.key)) e.preventDefault();
+        if (state === "gameover") state = "intro";
+        else if (state === "intro") startGame();
+      });
+      window.addEventListener("keyup", (e) => keys.delete(e.key));
+
+      const PADDLE_MAX_SPEED = () => W();
+      const PADDLE_ACCEL = () => W() * 4;
+
+      const DASH_ON = [10, 14];
+      const DASH_OFF = [];
+
+      let paused = false;
+
+      canvas.addEventListener("click", (e) => {
+        if (state === "playing") {
+          paused = !paused;
+          return;
+        }
+        if (state === "intro") {
+          // Check if cursor toggle was clicked
+          if (
+            e.clientX >= toggleBtn.x &&
+            e.clientX <= toggleBtn.x + toggleBtn.w &&
+            e.clientY >= toggleBtn.y &&
+            e.clientY <= toggleBtn.y + toggleBtn.h
+          ) {
+            showCursor = !showCursor;
+          } else {
+            startGame();
+          }
+        } else if (state === "gameover") {
+          if (
+            e.clientX >= homeBtn.x && e.clientX <= homeBtn.x + homeBtn.w &&
+            e.clientY >= homeBtn.y && e.clientY <= homeBtn.y + homeBtn.h
+          ) {
+            window.location.href = "/";
+          } else if (
+            e.clientX >= calibBtn.x && e.clientX <= calibBtn.x + calibBtn.w &&
+            e.clientY >= calibBtn.y && e.clientY <= calibBtn.y + calibBtn.h
+          ) {
+            window.location.href = "/calibration/";
+          } else {
+            state = "intro";
+          }
+        }
+      });
+
+      function update(dt) {
+        if (state !== "playing" || paused) return;
+
+        const maxSpeed = PADDLE_MAX_SPEED();
+        const accel = PADDLE_ACCEL();
+        if (keys.has("ArrowLeft") || keys.has("a") || keys.has("A")) {
+          paddle.vx = Math.max(-maxSpeed, paddle.vx - accel * dt);
+        } else if (keys.has("ArrowRight") || keys.has("d") || keys.has("D")) {
+          paddle.vx = Math.min(maxSpeed, paddle.vx + accel * dt);
+        } else {
+          paddle.vx = 0;
+        }
+        paddle.x += paddle.vx * dt;
+        paddle.x = Math.max(0, Math.min(W() - PADDLE_WIDTH, paddle.x));
+
+        const prevX = ball.x;
+        const prevY = ball.y;
+        ball.x += ball.vx * dt;
+        ball.y += ball.vy * dt;
+
+        if (ball.y - BALL_RADIUS < 0) {
+          ball.y = BALL_RADIUS;
+          ball.vy = Math.abs(ball.vy);
+        }
+        if (ball.x - BALL_RADIUS < 0) {
+          ball.x = BALL_RADIUS;
+          ball.vx = Math.abs(ball.vx);
+        }
+        if (ball.x + BALL_RADIUS > W()) {
+          ball.x = W() - BALL_RADIUS;
+          ball.vx = -Math.abs(ball.vx);
+        }
+
+        const paddleTop = paddle.y;
+        const crossedEdge =
+          ball.vy > 0 &&
+          prevY + BALL_RADIUS < paddleTop &&
+          ball.y + BALL_RADIUS >= paddleTop;
+        if (crossedEdge) {
+          const t =
+            (paddleTop - (prevY + BALL_RADIUS)) /
+            (ball.y + BALL_RADIUS - (prevY + BALL_RADIUS));
+          const crossX = prevX + t * (ball.x - prevX);
+          if (
+            crossX + BALL_RADIUS >= paddle.x &&
+            crossX - BALL_RADIUS <= paddle.x + PADDLE_WIDTH
+          ) {
+            ball.y = paddleTop - BALL_RADIUS;
+            ball.vy = -Math.abs(ball.vy);
+            const hitPos = (ball.x - paddle.x) / PADDLE_WIDTH;
+            ball.vx = (hitPos - 0.5) * 2 * (W() / CROSS_SECONDS) * 0.6;
+            opacity = Math.max(0, opacity - 0.01);
+            overlayOpacity = Math.max(0, overlayOpacity - 0.01);
+            score++;
+          }
+        }
+
+        if (ball.y - BALL_RADIUS > H()) {
+          state = "gameover";
+          document.exitPointerLock();
+        }
+      }
+
+      function drawGame() {
+        // Center dashed line
+        ctx.setLineDash(DASH_ON);
+        ctx.strokeStyle = "#333";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(0, H() / 2);
+        ctx.lineTo(W(), H() / 2);
+        ctx.stroke();
+        ctx.setLineDash(DASH_OFF);
+
+        // Paddle
+        ctx.fillStyle = `rgb(${Math.round(22*opacity)},${Math.round(123*opacity)},${Math.round(123*opacity)})`;
+        ctx.beginPath();
+        ctx.roundRect(paddle.x, paddle.y, PADDLE_WIDTH, PADDLE_HEIGHT, 4);
+        ctx.fill();
+
+        // Ball
+        ctx.beginPath();
+        ctx.arc(ball.x, ball.y, BALL_RADIUS, 0, Math.PI * 2);
+        ctx.fillStyle = `rgb(${Math.round(193 * opacity)},${Math.round(32 * opacity)},${Math.round(32 * opacity)})`;
+        ctx.fill();
+
+        // Mouse pointer dot
+        ctx.beginPath();
+        ctx.arc(mouse.x, mouse.y, 4, 0, Math.PI * 2);
+        ctx.fillStyle = "#aaa";
+        ctx.fill();
+
+        // Score
+        ctx.fillStyle = "rgba(255,255,255,0.4)";
+        ctx.font = "bold 48px monospace";
+        ctx.textAlign = "center";
+        ctx.fillText(score, W() / 2, 64);
+
+        if (paused) {
+          ctx.fillStyle = "rgba(0,0,0,0.45)";
+          ctx.fillRect(0, 0, W(), H());
+          ctx.fillStyle = "#fff";
+          ctx.font = "bold 40px sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText("Paused", W() / 2, H() / 2);
+          ctx.font = "18px sans-serif";
+          ctx.fillStyle = "rgba(255,255,255,0.6)";
+          ctx.fillText("Click to continue", W() / 2, H() / 2 + 40);
+        }
+      }
+
+      function drawIntro() {
+        ctx.fillStyle = "#fff";
+        ctx.font = "bold 56px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("Game 1", W() / 2, H() / 2 - 100);
+
+        ctx.font = "20px sans-serif";
+        ctx.fillStyle = "rgba(255,255,255,0.5)";
+        ctx.fillText(
+          "Use mouse or arrow keys to move the paddle",
+          W() / 2,
+          H() / 2 - 54,
+        );
+
+        // Toggle switch row: [switch]  [label]
+        const label = "Show mouse pointer";
+        ctx.font = "18px sans-serif";
+        const labelW = ctx.measureText(label).width;
+        const switchW = 52;
+        const switchH = 28;
+        const gap = 14;
+        const rowW = switchW + gap + labelW;
+        const rowX = W() / 2 - rowW / 2;
+        const rowY = H() / 2;
+
+        // Store clickable area covering the full row
+        toggleBtn.x = rowX;
+        toggleBtn.y = rowY - switchH / 2;
+        toggleBtn.w = rowW;
+        toggleBtn.h = switchH;
+
+        // Switch track
+        const trackX = rowX;
+        const trackY = rowY - switchH / 2;
+        const radius = switchH / 2;
+        ctx.fillStyle = showCursor ? "#007a8a" : "#666";
+        ctx.beginPath();
+        ctx.roundRect(trackX, trackY, switchW, switchH, radius);
+        ctx.fill();
+        if (!showCursor) {
+          ctx.strokeStyle = "#999";
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+        }
+
+        // Switch knob
+        const knobR = radius - 3;
+        const knobX = showCursor ? trackX + radius : trackX + switchW - radius;
+        ctx.fillStyle = showCursor ? "#fff" : "#ddd";
+        ctx.beginPath();
+        ctx.arc(knobX, rowY, knobR, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Label
+        ctx.fillStyle = "#e8eaf0";
+        ctx.textAlign = "left";
+        ctx.fillText(label, rowX + switchW + gap, rowY + 6);
+
+        ctx.fillStyle = "rgba(255,255,255,0.7)";
+        ctx.font = "22px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("Click anywhere to start", W() / 2, H() / 2 + 90);
+      }
+
+      const homeBtn = { x: 0, y: 0, w: 180, h: 40 };
+      const calibBtn = { x: 0, y: 0, w: 180, h: 40 };
+
+      function drawGameOver() {
+        ctx.fillStyle = "rgba(0,0,0,0.65)";
+        ctx.fillRect(0, 0, W(), H());
+
+        ctx.fillStyle = "#fff";
+        ctx.font = "bold 56px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("Game Over", W() / 2, H() / 2 - 30);
+
+        ctx.font = "28px sans-serif";
+        ctx.fillStyle = "rgba(255,255,255,0.7)";
+        ctx.fillText(`Score: ${score}`, W() / 2, H() / 2 + 20);
+
+        ctx.font = "20px sans-serif";
+        ctx.fillText("Click or press any key to continue", W() / 2, H() / 2 + 64);
+
+        // Buttons row
+        const btnGap = 12;
+        const totalW = homeBtn.w + btnGap + calibBtn.w;
+        const btnY = H() / 2 + 104;
+        homeBtn.x = W() / 2 - totalW / 2;
+        homeBtn.y = btnY;
+        calibBtn.x = homeBtn.x + homeBtn.w + btnGap;
+        calibBtn.y = btnY;
+
+        function drawBtn(btn, label) {
+          ctx.fillStyle = "#334";
+          ctx.beginPath();
+          ctx.roundRect(btn.x, btn.y, btn.w, btn.h, 6);
+          ctx.fill();
+          ctx.strokeStyle = "#778";
+          ctx.lineWidth = 1;
+          ctx.stroke();
+          ctx.fillStyle = "#ccd";
+          ctx.font = "14px sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText(label, btn.x + btn.w / 2, btn.y + 26);
+        }
+
+        drawBtn(homeBtn, "← Homepage");
+        drawBtn(calibBtn, "Color Calibration");
+      }
+
+      function draw() {
+        ctx.fillStyle = "#000";
+        ctx.fillRect(0, 0, W(), H());
+        ctx.fillStyle = `rgba(51,51,51,${overlayOpacity})`;
+        ctx.fillRect(0, 0, W(), H());
+
+        if (state === "intro") {
+          drawIntro();
+        } else if (state === "playing") {
+          drawGame();
+        } else if (state === "gameover") {
+          drawGame();
+          drawGameOver();
+        }
+      }
+
+      function loop(timestamp) {
+        if (lastTime === null) lastTime = timestamp;
+        const dt = Math.min((timestamp - lastTime) / 1000, 0.05);
+        lastTime = timestamp;
+
+        update(dt);
+        draw();
+        requestAnimationFrame(loop);
+      }
+
+      requestAnimationFrame(loop);
+    </script>
+  </body>
+</html>
