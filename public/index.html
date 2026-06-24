@@ -84,6 +84,52 @@
         color: #e8eaf0;
       }
 
+      .steps {
+        display: grid;
+        gap: 20px;
+        margin-bottom: 72px;
+      }
+
+      .step {
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+      }
+
+      .step-number {
+        flex-shrink: 0;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #1e2740;
+        border: 1px solid #2e3f60;
+        color: #4fc3f7;
+        font-family: sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 2px;
+      }
+
+      .step-body h3 {
+        font-size: 1rem;
+        font-weight: normal;
+        color: #e8eaf0;
+        margin-bottom: 4px;
+      }
+
+      .step-body p {
+        color: #9aaac8;
+        font-size: 0.95rem;
+        max-width: 580px;
+      }
+
+      .step-body p strong {
+        color: #e8eaf0;
+      }
+
       .cta {
         border-top: 1px solid #1e2740;
         padding-top: 48px;
@@ -123,76 +169,121 @@
   <body>
     <header>
       <h1>Amblyopia <span>Games</span> [beta]</h1>
-      <h2>Browser-based amblyopia game for research</h2>
-      <p class="tagline">
-        Vision therapy you actually want to do — browser-based games built for
-        lazy eye treatment.
-      </p>
+      <p class="tagline">Browser-based lazy eye game for research purposes</p>
     </header>
 
     <main>
+      <h2>Why Amblyopia Games?</h2>
       <p class="intro">
-        Amblyopia (lazy eye) affects roughly
-        <strong>3% of the population</strong> and is typically treated with
-        patching — hours of covering the strong eye while doing nothing
-        engaging. We replace the patch with games designed to force the weaker
-        eye to work, so therapy becomes something patients look forward to.
+        Promising research suggests that
+        <strong>dichoptic game-based therapy</strong>
+        — presenting different images to each eye simultaneously — may produce
+        stronger outcomes than traditional patching for amblyopia (lazy eye).
+        This project explores that approach in a browser, making it easy to
+        study and refine without any downloads or device lock-in.
       </p>
 
       <div class="advantages">
         <div class="advantage">
-          <h2>Works in any browser</h2>
+          <h2>Browser-based and accessible</h2>
           <p>
-            No app store, no downloads, no device lock-in. Patients open a link
-            and play — on a tablet at home, a laptop at school, or a phone in
-            the waiting room.
-            <strong>Zero friction between prescription and play.</strong>
+            Running entirely in the browser removes barriers to participation —
+            no app installs, no specialized hardware.
+            <strong>Any device with a screen and internet access</strong> is
+            enough to take part in a session.
           </p>
         </div>
 
         <div class="advantage">
-          <h2>Dichoptic design</h2>
+          <h2>Dichoptic stimulation</h2>
           <p>
-            Each game is built around <strong>dichoptic stimulation</strong> —
-            presenting different visual information to each eye simultaneously.
-            This approach has shown stronger outcomes than patching alone in
-            recent clinical research, because it trains binocular cooperation
-            rather than suppression.
+            Each game delivers
+            <strong>different visual input to each eye</strong>
+            simultaneously using anaglyph (red-cyan) glasses. This is the core
+            mechanism under investigation — training binocular cooperation
+            rather than suppressing the fellow eye as patching does.
           </p>
         </div>
 
         <div class="advantage">
-          <h2>Adaptive difficulty</h2>
+          <h2>Controlled difficulty</h2>
           <p>
-            Games get harder as the patient improves. Speed, contrast, and
-            complexity scale automatically so the weaker eye is always
-            <strong>challenged at the right level</strong> — not bored, not
-            overwhelmed.
+            Contrast, speed, and task complexity can be adjusted per session.
+            Keeping the weaker eye
+            <strong
+              >consistently challenged without inducing suppression</strong
+            >
+            is a key variable the research aims to understand better.
           </p>
         </div>
 
         <div class="advantage">
-          <h2>Clinician dashboard</h2>
+          <h2>Lightweight data collection</h2>
           <p>
-            Prescribe specific games, set session targets, and track adherence
-            and visual progress remotely.
-            <strong>No in-person visit required</strong> to adjust the protocol.
+            Session outcomes — score, duration, and difficulty level — are
+            logged to support analysis.
+            <strong>No personal data is collected</strong>; the focus is on
+            aggregate performance trends across sessions.
           </p>
         </div>
 
         <div class="advantage">
-          <h2>Engagement that lasts</h2>
+          <h2>Early stage</h2>
           <p>
-            Patching compliance drops sharply after the first few weeks —
-            especially in children. A game-based approach sustains
-            <strong>3–5× higher session completion rates</strong>
-            compared to passive patching in early pilots.
+            This is a research prototype, not a clinical tool. Results are
+            exploratory. <strong>Feedback from participants</strong> and
+            collaborating clinicians will actively shape the direction of the
+            work.
           </p>
         </div>
       </div>
 
+      <h2>What you will need</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-body">
+            <h3>A professional recommendation</h3>
+            <p>
+              Dichoptic therapy is not suitable for everyone with amblyopia.
+              <strong>An optometrist or ophthalmologist can confirm</strong>
+              whether binocular stimulation is appropriate for your case and
+              advise on session frequency and duration.
+            </p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-body">
+            <h3>Red-cyan anaglyph glasses</h3>
+            <p>
+              The games use color filtering to send different images to each eye.
+              Standard <strong>red-cyan 3D glasses</strong> — the kind used for
+              old-style 3D movies — work perfectly and are widely available
+              online for a few dollars.
+            </p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-body">
+            <h3>A free account</h3>
+            <p>
+              Creating an account lets you (and your clinician, if applicable)
+              track session history over time.
+              <strong>Progress — or lack of it — is useful data.</strong>
+              No payment or personal health information is required to sign up.
+            </p>
+          </div>
+        </div>
+      </div>
+
       <div class="cta">
-        <p>Try the game — no login required and it's free to use</p>
+        <p>
+          Try the free prototype — no login required, no personal data collected
+        </p>
         <div class="games">
           <a href="/game 1/">Game 1 &rarr;</a>
           <a href="/calibration/">Color Calibration &rarr;</a>

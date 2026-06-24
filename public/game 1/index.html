@@ -76,7 +76,7 @@
         mouse.y = H() / 2;
         resetBall();
         paused = false;
-        if (!showCursor) canvas.requestPointerLock();
+        if (!showCursor && !isTouchDevice()) canvas.requestPointerLock();
       }
 
       // Mouse control
@@ -92,15 +92,36 @@
       });
 
       // Touch control
-      canvas.addEventListener(
-        "touchmove",
-        (e) => {
-          e.preventDefault();
-          if (state === "playing")
-            paddle.x = e.touches[0].clientX - PADDLE_WIDTH / 2;
-        },
-        { passive: false },
-      );
+      canvas.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        const t = e.touches[0];
+        mouse.x = t.clientX;
+        mouse.y = t.clientY;
+        if (state === "intro") {
+          startGame();
+        } else if (state === "playing") {
+          paddle.x = t.clientX - PADDLE_WIDTH / 2;
+        } else if (state === "gameover") {
+          const x = t.clientX, y = t.clientY;
+          if (x >= homeBtn.x && x <= homeBtn.x + homeBtn.w &&
+              y >= homeBtn.y && y <= homeBtn.y + homeBtn.h) {
+            window.location.href = "/";
+          } else if (x >= calibBtn.x && x <= calibBtn.x + calibBtn.w &&
+                     y >= calibBtn.y && y <= calibBtn.y + calibBtn.h) {
+            window.location.href = "/calibration/";
+          } else {
+            state = "intro";
+          }
+        }
+      }, { passive: false });
+
+      canvas.addEventListener("touchmove", (e) => {
+        e.preventDefault();
+        const t = e.touches[0];
+        mouse.x = t.clientX;
+        mouse.y = t.clientY;
+        if (state === "playing") paddle.x = t.clientX - PADDLE_WIDTH / 2;
+      }, { passive: false });
 
       // Keyboard control
       const keys = new Set();
@@ -120,6 +141,8 @@
 
       const PADDLE_MAX_SPEED = () => W();
       const PADDLE_ACCEL = () => W() * 4;
+
+      const isTouchDevice = () => navigator.maxTouchPoints > 0;
 
       const DASH_ON = [10, 14];
       const DASH_OFF = [];
@@ -247,10 +270,12 @@
         ctx.fill();
 
         // Mouse pointer dot
-        ctx.beginPath();
-        ctx.arc(mouse.x, mouse.y, 4, 0, Math.PI * 2);
-        ctx.fillStyle = "#aaa";
-        ctx.fill();
+        if (!isTouchDevice()) {
+          ctx.beginPath();
+          ctx.arc(mouse.x, mouse.y, 4, 0, Math.PI * 2);
+          ctx.fillStyle = "#aaa";
+          ctx.fill();
+        }
 
         // Score
         ctx.fillStyle = "rgba(255,255,255,0.4)";
@@ -280,59 +305,66 @@
         ctx.font = "20px sans-serif";
         ctx.fillStyle = "rgba(255,255,255,0.5)";
         ctx.fillText(
-          "Use mouse or arrow keys to move the paddle",
+          isTouchDevice()
+            ? "Drag to move the paddle"
+            : "Use mouse or arrow keys to move the paddle",
           W() / 2,
           H() / 2 - 54,
         );
 
-        // Toggle switch row: [switch]  [label]
-        const label = "Show mouse pointer";
-        ctx.font = "18px sans-serif";
-        const labelW = ctx.measureText(label).width;
-        const switchW = 52;
-        const switchH = 28;
-        const gap = 14;
-        const rowW = switchW + gap + labelW;
-        const rowX = W() / 2 - rowW / 2;
-        const rowY = H() / 2;
+        if (!isTouchDevice()) {
+          // Toggle switch row: [switch]  [label]
+          const label = "Show mouse pointer";
+          ctx.font = "18px sans-serif";
+          const labelW = ctx.measureText(label).width;
+          const switchW = 52;
+          const switchH = 28;
+          const gap = 14;
+          const rowW = switchW + gap + labelW;
+          const rowX = W() / 2 - rowW / 2;
+          const rowY = H() / 2;
 
-        // Store clickable area covering the full row
-        toggleBtn.x = rowX;
-        toggleBtn.y = rowY - switchH / 2;
-        toggleBtn.w = rowW;
-        toggleBtn.h = switchH;
+          // Store clickable area covering the full row
+          toggleBtn.x = rowX;
+          toggleBtn.y = rowY - switchH / 2;
+          toggleBtn.w = rowW;
+          toggleBtn.h = switchH;
 
-        // Switch track
-        const trackX = rowX;
-        const trackY = rowY - switchH / 2;
-        const radius = switchH / 2;
-        ctx.fillStyle = showCursor ? "#007a8a" : "#666";
-        ctx.beginPath();
-        ctx.roundRect(trackX, trackY, switchW, switchH, radius);
-        ctx.fill();
-        if (!showCursor) {
-          ctx.strokeStyle = "#999";
-          ctx.lineWidth = 1.5;
-          ctx.stroke();
+          // Switch track
+          const trackX = rowX;
+          const trackY = rowY - switchH / 2;
+          const radius = switchH / 2;
+          ctx.fillStyle = showCursor ? "#007a8a" : "#666";
+          ctx.beginPath();
+          ctx.roundRect(trackX, trackY, switchW, switchH, radius);
+          ctx.fill();
+          if (!showCursor) {
+            ctx.strokeStyle = "#999";
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+          }
+
+          // Switch knob
+          const knobR = radius - 3;
+          const knobX = showCursor ? trackX + radius : trackX + switchW - radius;
+          ctx.fillStyle = showCursor ? "#fff" : "#ddd";
+          ctx.beginPath();
+          ctx.arc(knobX, rowY, knobR, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Label
+          ctx.fillStyle = "#e8eaf0";
+          ctx.textAlign = "left";
+          ctx.fillText(label, rowX + switchW + gap, rowY + 6);
         }
-
-        // Switch knob
-        const knobR = radius - 3;
-        const knobX = showCursor ? trackX + radius : trackX + switchW - radius;
-        ctx.fillStyle = showCursor ? "#fff" : "#ddd";
-        ctx.beginPath();
-        ctx.arc(knobX, rowY, knobR, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Label
-        ctx.fillStyle = "#e8eaf0";
-        ctx.textAlign = "left";
-        ctx.fillText(label, rowX + switchW + gap, rowY + 6);
 
         ctx.fillStyle = "rgba(255,255,255,0.7)";
         ctx.font = "22px sans-serif";
         ctx.textAlign = "center";
-        ctx.fillText("Click anywhere to start", W() / 2, H() / 2 + 90);
+        ctx.fillText(
+          isTouchDevice() ? "Tap anywhere to start" : "Click anywhere to start",
+          W() / 2, H() / 2 + 90
+        );
       }
 
       const homeBtn = { x: 0, y: 0, w: 180, h: 40 };
@@ -352,7 +384,10 @@
         ctx.fillText(`Score: ${score}`, W() / 2, H() / 2 + 20);
 
         ctx.font = "20px sans-serif";
-        ctx.fillText("Click or press any key to continue", W() / 2, H() / 2 + 64);
+        ctx.fillText(
+          isTouchDevice() ? "Tap to continue" : "Click or press any key to continue",
+          W() / 2, H() / 2 + 64
+        );
 
         // Buttons row
         const btnGap = 12;
