@@ -115,10 +115,10 @@
           const x = t.clientX, y = t.clientY;
           if (x >= homeBtn.x && x <= homeBtn.x + homeBtn.w &&
               y >= homeBtn.y && y <= homeBtn.y + homeBtn.h) {
-            window.location.href = "/";
+            window.location.href = "/games/";
           } else if (x >= calibBtn.x && x <= calibBtn.x + calibBtn.w &&
                      y >= calibBtn.y && y <= calibBtn.y + calibBtn.h) {
-            window.location.href = "/calibration/";
+            window.location.href = "/games/calibration/";
           } else {
             state = "intro";
           }
@@ -181,12 +181,12 @@
             e.clientX >= homeBtn.x && e.clientX <= homeBtn.x + homeBtn.w &&
             e.clientY >= homeBtn.y && e.clientY <= homeBtn.y + homeBtn.h
           ) {
-            window.location.href = "/";
+            window.location.href = "/games/";
           } else if (
             e.clientX >= calibBtn.x && e.clientX <= calibBtn.x + calibBtn.w &&
             e.clientY >= calibBtn.y && e.clientY <= calibBtn.y + calibBtn.h
           ) {
-            window.location.href = "/calibration/";
+            window.location.href = "/games/calibration/";
           } else {
             state = "intro";
           }

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Amblyopia Games</title>
+    <title>Amblyopia Games — Research Platform</title>
     <style>
       * {
         margin: 0;
@@ -49,105 +49,44 @@
         padding: 56px 32px 80px;
       }
 
-      .intro {
-        font-size: 1.15rem;
-        color: #c5cfe8;
-        max-width: 680px;
-        margin-bottom: 64px;
+      section {
+        margin-bottom: 56px;
       }
 
-      .intro strong {
-        color: #ffffff;
-      }
-
-      .advantages {
-        display: grid;
-        gap: 40px;
-        margin-bottom: 72px;
-      }
-
-      .advantage h2 {
+      h2 {
         font-size: 1rem;
         font-weight: normal;
         text-transform: uppercase;
         letter-spacing: 1.5px;
         color: #4fc3f7;
-        margin-bottom: 10px;
+        margin-bottom: 16px;
       }
 
-      .advantage p {
+      p {
         color: #9aaac8;
-        max-width: 620px;
+        max-width: 680px;
+        margin-bottom: 16px;
       }
 
-      .advantage p strong {
-        color: #e8eaf0;
+      p:last-child {
+        margin-bottom: 0;
       }
 
-      .steps {
-        display: grid;
-        gap: 20px;
-        margin-bottom: 72px;
-      }
-
-      .step {
-        display: flex;
-        gap: 20px;
-        align-items: flex-start;
-      }
-
-      .step-number {
-        flex-shrink: 0;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        background: #1e2740;
-        border: 1px solid #2e3f60;
-        color: #4fc3f7;
-        font-family: sans-serif;
-        font-size: 0.85rem;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-top: 2px;
-      }
-
-      .step-body h3 {
-        font-size: 1rem;
-        font-weight: normal;
-        color: #e8eaf0;
-        margin-bottom: 4px;
-      }
-
-      .step-body p {
-        color: #9aaac8;
-        font-size: 0.95rem;
-        max-width: 580px;
-      }
-
-      .step-body p strong {
+      p strong {
         color: #e8eaf0;
       }
 
       .cta {
         border-top: 1px solid #1e2740;
         padding-top: 48px;
+        margin-bottom: 0;
       }
 
       .cta p {
-        color: #8899bb;
         margin-bottom: 24px;
-        font-size: 1rem;
       }
 
-      .games {
-        display: flex;
-        gap: 16px;
-        flex-wrap: wrap;
-      }
-
-      .games a {
+      .cta a {
         display: inline-block;
         padding: 14px 28px;
         background: #4fc3f7;
@@ -161,134 +100,75 @@
         transition: background 0.15s;
       }
 
-      .games a:hover {
+      .cta a:hover {
         background: #81d4fa;
       }
     </style>
   </head>
   <body>
     <header>
-      <h1>Amblyopia <span>Games</span> [beta]</h1>
-      <p class="tagline">Browser-based lazy eye game for research purposes</p>
+      <h1>Amblyopia <span>Games</span></h1>
+      <p class="tagline">
+        A browser-based research platform for dichoptic amblyopia therapy.
+      </p>
     </header>
 
     <main>
-      <h2>Why Amblyopia Games?</h2>
-      <p class="intro">
-        Promising research suggests that
-        <strong>dichoptic game-based therapy</strong>
-        — presenting different images to each eye simultaneously — may produce
-        stronger outcomes than traditional patching for amblyopia (lazy eye).
-        This project explores that approach in a browser, making it easy to
-        study and refine without any downloads or device lock-in.
-      </p>
-
-      <div class="advantages">
-        <div class="advantage">
-          <h2>Browser-based and accessible</h2>
-          <p>
-            Running entirely in the browser removes barriers to participation —
-            no app installs, no specialized hardware.
-            <strong>Any device with a screen and internet access</strong> is
-            enough to take part in a session.
-          </p>
-        </div>
-
-        <div class="advantage">
-          <h2>Dichoptic stimulation</h2>
-          <p>
-            Each game delivers
-            <strong>different visual input to each eye</strong>
-            simultaneously using anaglyph (red-cyan) glasses. This is the core
-            mechanism under investigation — training binocular cooperation
-            rather than suppressing the fellow eye as patching does.
-          </p>
-        </div>
-
-        <div class="advantage">
-          <h2>Controlled difficulty</h2>
-          <p>
-            Contrast, speed, and task complexity can be adjusted per session.
-            Keeping the weaker eye
-            <strong
-              >consistently challenged without inducing suppression</strong
-            >
-            is a key variable the research aims to understand better.
-          </p>
-        </div>
-
-        <div class="advantage">
-          <h2>Lightweight data collection</h2>
-          <p>
-            Session outcomes — score, duration, and difficulty level — are
-            logged to support analysis.
-            <strong>No personal data is collected</strong>; the focus is on
-            aggregate performance trends across sessions.
-          </p>
-        </div>
-
-        <div class="advantage">
-          <h2>Early stage</h2>
-          <p>
-            This is a research prototype, not a clinical tool. Results are
-            exploratory. <strong>Feedback from participants</strong> and
-            collaborating clinicians will actively shape the direction of the
-            work.
-          </p>
-        </div>
-      </div>
-
-      <h2>What you will need</h2>
-      <div class="steps">
-        <div class="step">
-          <div class="step-number">1</div>
-          <div class="step-body">
-            <h3>A professional recommendation</h3>
-            <p>
-              Dichoptic therapy is not suitable for everyone with amblyopia.
-              <strong>An optometrist or ophthalmologist can confirm</strong>
-              whether binocular stimulation is appropriate for your case and
-              advise on session frequency and duration.
-            </p>
-          </div>
-        </div>
-
-        <div class="step">
-          <div class="step-number">2</div>
-          <div class="step-body">
-            <h3>Red-cyan anaglyph glasses</h3>
-            <p>
-              The games use color filtering to send different images to each eye.
-              Standard <strong>red-cyan 3D glasses</strong> — the kind used for
-              old-style 3D movies — work perfectly and are widely available
-              online for a few dollars.
-            </p>
-          </div>
-        </div>
-
-        <div class="step">
-          <div class="step-number">3</div>
-          <div class="step-body">
-            <h3>A free account</h3>
-            <p>
-              Creating an account lets you (and your clinician, if applicable)
-              track session history over time.
-              <strong>Progress — or lack of it — is useful data.</strong>
-              No payment or personal health information is required to sign up.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div class="cta">
+      <section>
+        <h2>The problem</h2>
         <p>
-          Try the free prototype — no login required, no personal data collected
+          Amblyopia — commonly known as lazy eye — affects roughly
+          <strong>3% of the population</strong> and develops when the brain
+          begins to favour one eye over the other during early visual
+          development. Left untreated, it causes permanent reduction in visual
+          acuity in the weaker eye.
         </p>
-        <div class="games">
-          <a href="/game 1/">Game 1 &rarr;</a>
-          <a href="/calibration/">Color Calibration &rarr;</a>
-        </div>
-      </div>
+        <p>
+          The standard treatment, occlusion patching of the stronger eye, has
+          changed little in decades. Compliance is poor — especially in children
+          — and the underlying suppression mechanism is not directly addressed.
+        </p>
+      </section>
+
+      <section>
+        <h2>The approach</h2>
+        <p>
+          Promising clinical research suggests that
+          <strong>dichoptic stimulation</strong> — presenting different visual
+          content to each eye simultaneously — may produce stronger and more
+          durable outcomes than patching alone. Rather than suppressing the
+          stronger eye, dichoptic therapy trains both eyes to cooperate,
+          targeting the binocular deficit at its source.
+        </p>
+        <p>
+          This platform implements that approach through browser-based games
+          using standard red-cyan anaglyph glasses. Running entirely in the
+          browser means no installations, no device lock-in, and low barriers
+          to participation — practical for both clinical research settings and
+          at-home use.
+        </p>
+      </section>
+
+      <section>
+        <h2>Status</h2>
+        <p>
+          This is an <strong>early-stage research prototype</strong>, not a
+          validated clinical tool. The games are functional and playable.
+          Session outcomes are collected anonymously to inform ongoing
+          development. Results are exploratory.
+        </p>
+        <p>
+          Collaboration with optometrists, ophthalmologists, and vision
+          researchers is actively sought. If you work in this field and are
+          interested in evaluating the platform or contributing to the research
+          direction, feedback is welcome.
+        </p>
+      </section>
+
+      <section class="cta">
+        <p>Try the games — no login required, no personal data collected.</p>
+        <a href="/games/">Go to games &rarr;</a>
+      </section>
     </main>
   </body>
 </html>
