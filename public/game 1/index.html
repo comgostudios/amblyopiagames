@@ -10,6 +10,9 @@
         padding: 0;
         box-sizing: border-box;
       }
+      html {
+        overflow: hidden;
+      }
       body {
         background: #555;
         overflow: hidden;
@@ -17,6 +20,9 @@
       }
       canvas {
         display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
       }
     </style>
   </head>
@@ -27,11 +33,15 @@
       const ctx = canvas.getContext("2d");
 
       function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        const vv = window.visualViewport;
+        canvas.width = vv ? Math.round(vv.width) : window.innerWidth;
+        canvas.height = vv ? Math.round(vv.height) : window.innerHeight;
       }
       resize();
       window.addEventListener("resize", resize);
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", resize);
+      }
 
       const W = () => canvas.width;
       const H = () => canvas.height;
@@ -70,7 +80,7 @@
         opacity = 1;
         overlayOpacity = 1;
         paddle.x = W() / 2 - PADDLE_WIDTH / 2;
-        paddle.y = H() - 42;
+        paddle.y = H() - 64;
         paddle.vx = 0;
         mouse.x = W() / 2;
         mouse.y = H() / 2;
