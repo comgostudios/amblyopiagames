@@ -1,0 +1,679 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Account — AmblyopiaLabs</title>
+    <script src="/shared/layout.js" defer></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      body {
+        font-family: Georgia, serif;
+        background: #ffffff;
+        color: #1e293b;
+        line-height: 1.7;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      main {
+        flex: 1;
+        max-width: 640px;
+        margin: 0 auto;
+        padding: 56px 32px 80px;
+        width: 100%;
+      }
+
+      h1 {
+        font-size: 1.6rem;
+        font-weight: normal;
+        color: #1e293b;
+        margin-bottom: 40px;
+      }
+
+      .profile-prompt {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        background: rgba(3,105,161,0.06);
+        border: 1px solid rgba(3,105,161,0.18);
+        border-radius: 6px;
+        padding: 16px 20px;
+        margin-bottom: 24px;
+        font-family: sans-serif;
+        font-size: 0.88rem;
+        color: #0369a1;
+        line-height: 1.5;
+      }
+      .profile-prompt-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+
+      .card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        overflow: hidden;
+        margin-bottom: 24px;
+      }
+
+      .card-title {
+        font-family: sans-serif;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: #94a3b8;
+        padding: 12px 20px;
+        border-bottom: 1px solid #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .edit-icon-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #cbd5e1;
+        font-size: 0.95rem;
+        padding: 2px 4px;
+        border-radius: 3px;
+        transition: color 0.15s, background 0.15s;
+      }
+      .edit-icon-btn:hover { color: #0369a1; background: rgba(3,105,161,0.08); }
+
+      /* Read-only rows */
+      .field {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 13px 20px;
+        border-bottom: 1px solid #f1f5f9;
+      }
+      .field:last-child { border-bottom: none; }
+
+      .field-label {
+        font-family: sans-serif;
+        font-size: 0.8rem;
+        color: #94a3b8;
+        min-width: 110px;
+        flex-shrink: 0;
+      }
+
+      .field-value {
+        font-size: 0.95rem;
+        color: #334155;
+        flex: 1;
+      }
+
+      .badge {
+        display: inline-block;
+        font-family: sans-serif;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 3px 10px;
+        border-radius: 20px;
+        background: rgba(3,105,161,0.08);
+        color: #0369a1;
+        border: 1px solid rgba(3,105,161,0.20);
+      }
+
+      .clinic-code {
+        font-family: monospace;
+        font-size: 1.4rem;
+        letter-spacing: 6px;
+        color: #0369a1;
+      }
+
+      /* Edit form */
+      .edit-area { padding: 18px 20px 20px; }
+
+      .edit-row {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+
+      .edit-field { flex: 1; }
+
+      .edit-field label {
+        display: block;
+        font-family: sans-serif;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        color: #64748b;
+        margin-bottom: 8px;
+      }
+
+      .edit-field input {
+        width: 100%;
+        padding: 10px 14px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
+        color: #1e293b;
+        font-family: Georgia, serif;
+        font-size: 0.95rem;
+        outline: none;
+        transition: border-color 0.15s;
+      }
+      .edit-field input:focus { border-color: #0369a1; }
+      .edit-field input[type="date"]::-webkit-calendar-picker-indicator {
+        opacity: 0.5;
+        cursor: pointer;
+      }
+
+      .edit-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 4px;
+      }
+
+      .save-btn {
+        padding: 9px 22px;
+        background: #0369a1;
+        color: #ffffff;
+        border: none;
+        border-radius: 4px;
+        font-family: sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      .save-btn:hover:not(:disabled) { background: #0284c7; }
+      .save-btn:disabled { background: #e2e8f0; color: #94a3b8; cursor: not-allowed; }
+
+      .cancel-btn {
+        padding: 9px 16px;
+        background: none;
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
+        font-family: sans-serif;
+        font-size: 0.85rem;
+        color: #64748b;
+        cursor: pointer;
+        transition: border-color 0.15s, color 0.15s;
+      }
+      .cancel-btn:hover { border-color: #cbd5e1; color: #334155; }
+
+      .form-status {
+        font-family: sans-serif;
+        font-size: 0.82rem;
+        color: #166534;
+      }
+      .form-status.error { color: #dc2626; }
+
+      /* Email verify step */
+      .verify-area { padding: 20px 20px 22px; }
+
+      .verify-area p {
+        font-family: sans-serif;
+        font-size: 0.88rem;
+        color: #64748b;
+        margin-bottom: 20px;
+        line-height: 1.5;
+      }
+      .verify-area p strong { color: #1e293b; }
+
+      .otp-group {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .otp-digit {
+        width: 48px;
+        height: 58px;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
+        color: #1e293b;
+        font-family: sans-serif;
+        font-size: 1.5rem;
+        text-align: center;
+        outline: none;
+        transition: border-color 0.15s;
+        caret-color: transparent;
+      }
+      .otp-digit:focus { border-color: #0369a1; }
+
+      #loading, #error-msg {
+        font-family: sans-serif;
+        font-size: 0.9rem;
+        color: #64748b;
+        padding: 40px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>My Account</h1>
+
+      <div id="loading">Loading…</div>
+      <div id="error-msg" style="display:none"></div>
+
+      <div id="account-content" style="display:none">
+
+        <div class="profile-prompt" id="profile-prompt" style="display:none">
+          <span class="profile-prompt-icon">&#9432;</span>
+          <span>Complete your profile so clinicians and research staff can identify you.</span>
+        </div>
+
+        <div class="card">
+          <div class="card-title">
+            <span>Profile</span>
+            <button class="edit-icon-btn" id="edit-btn" onclick="enterEditMode()" style="display:none" title="Edit profile">&#9998;</button>
+          </div>
+
+          <!-- View mode -->
+          <div id="profile-view" style="display:none">
+            <div class="field">
+              <span class="field-label">First name</span>
+              <span class="field-value" id="v-first"></span>
+            </div>
+            <div class="field">
+              <span class="field-label">Last name</span>
+              <span class="field-value" id="v-last"></span>
+            </div>
+            <div class="field" id="v-dob-field" style="display:none">
+              <span class="field-label">Date of birth</span>
+              <span class="field-value" id="v-dob"></span>
+            </div>
+            <div class="field">
+              <span class="field-label">Email</span>
+              <span class="field-value" id="v-email"></span>
+            </div>
+            <div class="field">
+              <span class="field-label">Role</span>
+              <span class="field-value" id="v-role"></span>
+            </div>
+          </div>
+
+          <!-- Edit mode -->
+          <div class="edit-area" id="profile-edit" style="display:none">
+            <div class="edit-row">
+              <div class="edit-field">
+                <label for="edit-first">First name</label>
+                <input type="text" id="edit-first" placeholder="Jane" autocomplete="given-name" />
+              </div>
+              <div class="edit-field">
+                <label for="edit-last">Last name</label>
+                <input type="text" id="edit-last" placeholder="Smith" autocomplete="family-name" />
+              </div>
+            </div>
+            <div class="edit-row" id="dob-row" style="display:none">
+              <div class="edit-field">
+                <label for="edit-dob">Date of birth</label>
+                <input type="date" id="edit-dob" autocomplete="bday" />
+              </div>
+            </div>
+            <div class="edit-row">
+              <div class="edit-field">
+                <label for="edit-email">Email</label>
+                <input type="email" id="edit-email" placeholder="you@example.com" autocomplete="email" />
+              </div>
+            </div>
+            <div class="edit-actions">
+              <button class="save-btn" id="save-btn" onclick="saveProfile()">Save</button>
+              <button class="cancel-btn" id="cancel-btn" onclick="exitEditMode()" style="display:none">Cancel</button>
+              <span class="form-status" id="edit-status"></span>
+            </div>
+          </div>
+
+          <!-- Email verification step -->
+          <div class="verify-area" id="email-verify" style="display:none">
+            <p>We sent a 6-digit code to <strong id="pending-email-label"></strong>. Enter it below to confirm the change.</p>
+            <div class="otp-group" id="ev-otp-group">
+              <input class="otp-digit" id="ev0" inputmode="numeric" />
+              <input class="otp-digit" id="ev1" inputmode="numeric" />
+              <input class="otp-digit" id="ev2" inputmode="numeric" />
+              <input class="otp-digit" id="ev3" inputmode="numeric" />
+              <input class="otp-digit" id="ev4" inputmode="numeric" />
+              <input class="otp-digit" id="ev5" inputmode="numeric" />
+            </div>
+            <div class="edit-actions">
+              <button class="save-btn" id="ev-verify-btn" onclick="verifyEmailChange()">Verify</button>
+              <button class="cancel-btn" onclick="cancelEmailChange()">Cancel</button>
+              <span class="form-status" id="ev-status"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" id="clinic-card" style="display:none">
+          <div class="card-title"><span>Clinic</span></div>
+          <div class="field">
+            <span class="field-label">Clinic code</span>
+            <span class="field-value clinic-code" id="f-clinic-code"></span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><span>Activity</span></div>
+          <div class="field">
+            <span class="field-label">Member since</span>
+            <span class="field-value" id="f-created"></span>
+          </div>
+          <div class="field">
+            <span class="field-label">Last sign-in</span>
+            <span class="field-value" id="f-last-login"></span>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <script>
+      let token = localStorage.getItem('al_token');
+      if (!token) {
+        window.location.href = '/auth/?mode=signin&returnTo=' + encodeURIComponent(location.href);
+      }
+
+      let currentUser = null;
+      let pendingNewEmail = null;
+
+      // ── OTP digit inputs for email verification ──────────────────────────
+      const evDigits = Array.from({ length: 6 }, (_, i) => document.getElementById(`ev${i}`));
+
+      evDigits.forEach((input, i) => {
+        input.addEventListener('keydown', e => {
+          if (e.key === 'Backspace') {
+            if (input.value) { input.value = ''; } else if (i > 0) { evDigits[i - 1].focus(); evDigits[i - 1].value = ''; }
+            updateEvBtn(); e.preventDefault(); return;
+          }
+          if (e.key === 'ArrowLeft' && i > 0) { evDigits[i - 1].focus(); e.preventDefault(); }
+          if (e.key === 'ArrowRight' && i < 5) { evDigits[i + 1].focus(); e.preventDefault(); }
+          if (e.key === 'Enter') verifyEmailChange();
+        });
+        input.addEventListener('input', () => {
+          input.value = input.value.replace(/\D/g, '').slice(-1);
+          if (input.value && i < 5) evDigits[i + 1].focus();
+          updateEvBtn();
+        });
+        input.addEventListener('paste', e => {
+          e.preventDefault();
+          const text = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+          text.slice(0, 6).split('').forEach((ch, idx) => { if (evDigits[idx]) evDigits[idx].value = ch; });
+          evDigits[Math.min(text.length, 5)].focus();
+          updateEvBtn();
+        });
+      });
+
+      function getEvCode() { return evDigits.map(d => d.value).join(''); }
+      function updateEvBtn() { document.getElementById('ev-verify-btn').disabled = getEvCode().length !== 6; }
+
+      // ── Helpers ──────────────────────────────────────────────────────────
+      function fmtDate(iso) {
+        if (!iso) return '—';
+        return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      }
+
+      function fmtDOB(ymd) {
+        if (!ymd) return '—';
+        const [y, m, d] = ymd.split('-').map(Number);
+        return new Date(y, m - 1, d).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      }
+
+      function isComplete(u) {
+        return !!(u.firstName && u.lastName && (u.role !== 'patient' || u.dateOfBirth));
+      }
+
+      function setEditStatus(msg, isError) {
+        const el = document.getElementById('edit-status');
+        el.textContent = msg;
+        el.className = 'form-status' + (isError ? ' error' : '');
+      }
+
+      function setEvStatus(msg, isError) {
+        const el = document.getElementById('ev-status');
+        el.textContent = msg;
+        el.className = 'form-status' + (isError ? ' error' : '');
+      }
+
+      function populateView(u) {
+        document.getElementById('v-first').textContent = u.firstName || '';
+        document.getElementById('v-last').textContent = u.lastName || '';
+        document.getElementById('v-email').textContent = u.email;
+        document.getElementById('v-role').innerHTML = `<span class="badge">${u.role}</span>`;
+        if (u.role === 'patient') {
+          document.getElementById('v-dob').textContent = fmtDOB(u.dateOfBirth);
+          document.getElementById('v-dob-field').style.display = '';
+        }
+      }
+
+      // ── State transitions ────────────────────────────────────────────────
+      function showViewMode() {
+        document.getElementById('profile-view').style.display = '';
+        document.getElementById('profile-edit').style.display = 'none';
+        document.getElementById('email-verify').style.display = 'none';
+        document.getElementById('edit-btn').style.display = '';
+        document.getElementById('cancel-btn').style.display = 'none';
+      }
+
+      function enterEditMode() {
+        document.getElementById('profile-view').style.display = 'none';
+        document.getElementById('profile-edit').style.display = '';
+        document.getElementById('email-verify').style.display = 'none';
+        document.getElementById('edit-btn').style.display = 'none';
+        document.getElementById('cancel-btn').style.display = '';
+        setEditStatus('');
+      }
+
+      function exitEditMode() {
+        document.getElementById('edit-first').value = currentUser.firstName || '';
+        document.getElementById('edit-last').value = currentUser.lastName || '';
+        document.getElementById('edit-dob').value = currentUser.dateOfBirth || '';
+        document.getElementById('edit-email').value = currentUser.email;
+        showViewMode();
+      }
+
+      function showEmailVerify(newEmail) {
+        pendingNewEmail = newEmail;
+        document.getElementById('pending-email-label').textContent = newEmail;
+        evDigits.forEach(d => d.value = '');
+        updateEvBtn();
+        document.getElementById('profile-edit').style.display = 'none';
+        document.getElementById('email-verify').style.display = '';
+        setEvStatus('');
+        evDigits[0].focus();
+      }
+
+      function cancelEmailChange() {
+        pendingNewEmail = null;
+        if (isComplete(currentUser)) {
+          showViewMode();
+        } else {
+          document.getElementById('email-verify').style.display = 'none';
+          document.getElementById('profile-edit').style.display = '';
+        }
+      }
+
+      // ── Load ─────────────────────────────────────────────────────────────
+      (async function load() {
+        try {
+          const res = await fetch('/api/account', { headers: { Authorization: 'Bearer ' + token } });
+
+          if (res.status === 401) {
+            localStorage.removeItem('al_token');
+            localStorage.removeItem('al_user');
+            window.location.href = '/auth/?mode=signin&returnTo=' + encodeURIComponent(location.href);
+            return;
+          }
+          if (!res.ok) throw new Error((await res.json()).error || 'Failed to load account.');
+
+          const u = await res.json();
+          currentUser = u;
+
+          document.getElementById('edit-first').value = u.firstName || '';
+          document.getElementById('edit-last').value = u.lastName || '';
+          document.getElementById('edit-email').value = u.email;
+
+          if (u.role === 'patient') {
+            document.getElementById('edit-dob').value = u.dateOfBirth || '';
+            document.getElementById('dob-row').style.display = '';
+          }
+
+          document.getElementById('f-created').textContent = fmtDate(u.createdAt);
+          document.getElementById('f-last-login').textContent = fmtDate(u.lastLogin);
+
+          if (u.clinicCode) {
+            document.getElementById('f-clinic-code').textContent = u.clinicCode;
+            document.getElementById('clinic-card').style.display = '';
+          }
+
+          const stored = localStorage.getItem('al_user');
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            parsed.firstName = u.firstName;
+            parsed.lastName = u.lastName;
+            localStorage.setItem('al_user', JSON.stringify(parsed));
+          }
+
+          if (isComplete(u)) {
+            populateView(u);
+            showViewMode();
+          } else {
+            document.getElementById('profile-prompt').style.display = '';
+            document.getElementById('profile-edit').style.display = '';
+          }
+
+          document.getElementById('loading').style.display = 'none';
+          document.getElementById('account-content').style.display = '';
+        } catch (err) {
+          document.getElementById('loading').style.display = 'none';
+          const el = document.getElementById('error-msg');
+          el.textContent = err.message;
+          el.style.display = '';
+        }
+      })();
+
+      // ── Save profile (name / DOB / email) ────────────────────────────────
+      async function saveProfile() {
+        const firstName   = document.getElementById('edit-first').value.trim();
+        const lastName    = document.getElementById('edit-last').value.trim();
+        const dobVisible  = document.getElementById('dob-row').style.display !== 'none';
+        const dateOfBirth = dobVisible ? (document.getElementById('edit-dob').value || undefined) : undefined;
+        const newEmail    = document.getElementById('edit-email').value.trim().toLowerCase();
+        const emailChanged = newEmail !== currentUser.email;
+
+        const btn = document.getElementById('save-btn');
+        btn.disabled = true;
+        btn.textContent = 'Saving…';
+        setEditStatus('');
+
+        try {
+          // Save name / DOB changes first
+          const patch = {};
+          if (firstName  !== (currentUser.firstName  || '')) patch.firstName = firstName;
+          if (lastName   !== (currentUser.lastName   || '')) patch.lastName  = lastName;
+          if (dateOfBirth !== undefined && dateOfBirth !== (currentUser.dateOfBirth || '')) patch.dateOfBirth = dateOfBirth;
+
+          if (Object.keys(patch).length) {
+            const r = await fetch('/api/account', {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+              body: JSON.stringify(patch),
+            });
+            const d = await r.json();
+            if (!r.ok) throw new Error(d.error || 'Failed to save.');
+
+            currentUser.firstName   = d.firstName;
+            currentUser.lastName    = d.lastName;
+            currentUser.dateOfBirth = d.dateOfBirth;
+
+            const stored = localStorage.getItem('al_user');
+            if (stored) {
+              const parsed = JSON.parse(stored);
+              parsed.firstName = d.firstName;
+              parsed.lastName  = d.lastName;
+              localStorage.setItem('al_user', JSON.stringify(parsed));
+            }
+          }
+
+          if (emailChanged) {
+            // Request OTP to new email; show verify step on success
+            const r = await fetch('/api/account/email/request', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+              body: JSON.stringify({ newEmail }),
+            });
+            const d = await r.json();
+            if (!r.ok) throw new Error(d.error || 'Failed to send verification code.');
+            showEmailVerify(newEmail);
+          } else {
+            // No email change — update view and decide mode
+            document.getElementById('profile-prompt').style.display =
+              isComplete(currentUser) ? 'none' : '';
+            if (isComplete(currentUser)) {
+              populateView(currentUser);
+              showViewMode();
+            } else {
+              setEditStatus('Saved');
+              setTimeout(() => setEditStatus(''), 3000);
+            }
+          }
+        } catch (err) {
+          setEditStatus(err.message, true);
+        } finally {
+          btn.disabled = false;
+          btn.textContent = 'Save';
+        }
+      }
+
+      // ── Verify email change ──────────────────────────────────────────────
+      async function verifyEmailChange() {
+        const code = getEvCode();
+        if (code.length !== 6) return;
+
+        const btn = document.getElementById('ev-verify-btn');
+        btn.disabled = true;
+        btn.textContent = 'Verifying…';
+        setEvStatus('');
+
+        try {
+          const r = await fetch('/api/account/email/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+            body: JSON.stringify({ newEmail: pendingNewEmail, code }),
+          });
+          const d = await r.json();
+          if (!r.ok) throw new Error(d.error || 'Verification failed.');
+
+          // Update token and localStorage with new email
+          token = d.token;
+          localStorage.setItem('al_token', d.token);
+          currentUser.email = d.user.email;
+
+          const stored = localStorage.getItem('al_user');
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            parsed.email = d.user.email;
+            localStorage.setItem('al_user', JSON.stringify(parsed));
+          }
+
+          pendingNewEmail = null;
+          document.getElementById('profile-prompt').style.display =
+            isComplete(currentUser) ? 'none' : '';
+
+          if (isComplete(currentUser)) {
+            populateView(currentUser);
+            showViewMode();
+          } else {
+            document.getElementById('email-verify').style.display = 'none';
+            document.getElementById('profile-edit').style.display = '';
+            document.getElementById('edit-email').value = currentUser.email;
+          }
+        } catch (err) {
+          setEvStatus(err.message, true);
+          btn.disabled = false;
+          btn.textContent = 'Verify';
+        }
+      }
+    </script>
+  </body>
+</html>

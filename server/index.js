@@ -1,43 +1,60 @@
-const http = require('http');
-const fs = require('fs');
+require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
+const express = require('express');
 const path = require('path');
+const rateLimit = require('express-rate-limit');
+const { connectDB } = require('./db');
+const { requestPasscode, verifyPasscode } = require('./routes/auth');
+const { getAccount, updateAccount, requestEmailChange, verifyEmailChange } = require('./routes/account');
+const requireAuth = require('./middleware/requireAuth');
 
 const PORT = process.env.PORT || 3000;
 const PUBLIC_DIR = path.join(__dirname, '..', 'public');
+const GAMES_HOSTS = ['amblyopia.games', 'www.amblyopia.games'];
 
-const MIME_TYPES = {
-  '.html': 'text/html',
-  '.css': 'text/css',
-  '.js': 'application/javascript',
-  '.json': 'application/json',
-  '.png': 'image/png',
-  '.jpg': 'image/jpeg',
-  '.svg': 'image/svg+xml',
-};
+const app = express();
+app.use(express.json());
 
-const server = http.createServer((req, res) => {
-  const decoded = decodeURIComponent(req.url).split('?')[0];
-  let filePath = path.join(PUBLIC_DIR, decoded);
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests. Please try again in 15 minutes.' },
+});
 
-  // Serve index.html for directory requests
+app.post('/api/auth/request', authLimiter, requestPasscode);
+app.post('/api/auth/verify', authLimiter, verifyPasscode);
+app.get('/api/account', requireAuth, getAccount);
+app.patch('/api/account', requireAuth, updateAccount);
+app.post('/api/account/email/request', authLimiter, requireAuth, requestEmailChange);
+app.post('/api/account/email/verify', authLimiter, requireAuth, verifyEmailChange);
+
+app.use((req, res) => {
+  const host = (req.headers.host || '').split(':')[0];
+  const root = GAMES_HOSTS.includes(host) ? path.join(PUBLIC_DIR, 'games') : PUBLIC_DIR;
+  const decoded = decodeURIComponent(req.path);
+  let filePath = path.join(root, decoded);
+
   if (!path.extname(filePath)) {
     filePath = path.join(filePath, 'index.html');
   }
 
-  const ext = path.extname(filePath);
-  const contentType = MIME_TYPES[ext] || 'application/octet-stream';
-
-  fs.readFile(filePath, (err, data) => {
-    if (err) {
-      res.writeHead(404, { 'Content-Type': 'text/plain' });
-      res.end('404 Not Found');
-      return;
-    }
-    res.writeHead(200, { 'Content-Type': contentType });
-    res.end(data);
+  res.sendFile(filePath, err => {
+    if (err) res.status(404).send('404 Not Found');
   });
 });
 
-server.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+// Global JSON error handler — must be last, after all routes
+app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
+  console.error(err);
+  res.status(500).json({ error: 'Internal server error.' });
 });
+
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));
+  })
+  .catch(err => {
+    console.error('Failed to connect to MongoDB:', err);
+    process.exit(1);
+  });
