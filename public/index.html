@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Amblyopia Games — Research Platform</title>
+    <title>AmblyopiaLabs — Research Platform</title>
+    <script src="/shared/layout.js" defer></script>
     <style>
       * {
         margin: 0;
@@ -13,33 +14,37 @@
 
       body {
         font-family: Georgia, serif;
-        background: #0a0e1a;
-        color: #e8eaf0;
+        background: #ffffff;
+        color: #1e293b;
         line-height: 1.7;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
       }
 
-      header {
+      .page-hero {
         max-width: 860px;
         margin: 0 auto;
-        padding: 80px 32px 48px;
-        border-bottom: 1px solid #1e2740;
+        padding: 56px 32px 48px;
+        border-bottom: 1px solid #e2e8f0;
+        width: 100%;
       }
 
-      header h1 {
+      .page-hero h1 {
         font-size: 2.8rem;
         font-weight: normal;
         letter-spacing: -0.5px;
-        color: #ffffff;
+        color: #1e293b;
         margin-bottom: 16px;
       }
 
-      header h1 span {
-        color: #4fc3f7;
+      .page-hero h1 span {
+        color: #0369a1;
       }
 
-      header p.tagline {
+      .page-hero p.tagline {
         font-size: 1.2rem;
-        color: #8899bb;
+        color: #64748b;
         max-width: 580px;
       }
 
@@ -47,6 +52,8 @@
         max-width: 860px;
         margin: 0 auto;
         padding: 56px 32px 80px;
+        flex: 1;
+        width: 100%;
       }
 
       section {
@@ -58,12 +65,12 @@
         font-weight: normal;
         text-transform: uppercase;
         letter-spacing: 1.5px;
-        color: #4fc3f7;
+        color: #0369a1;
         margin-bottom: 16px;
       }
 
       p {
-        color: #9aaac8;
+        color: #475569;
         max-width: 680px;
         margin-bottom: 16px;
       }
@@ -73,11 +80,11 @@
       }
 
       p strong {
-        color: #e8eaf0;
+        color: #1e293b;
       }
 
       .cta {
-        border-top: 1px solid #1e2740;
+        border-top: 1px solid #e2e8f0;
         padding-top: 48px;
         margin-bottom: 0;
       }
@@ -89,8 +96,8 @@
       .cta a {
         display: inline-block;
         padding: 14px 28px;
-        background: #4fc3f7;
-        color: #0a0e1a;
+        background: #0369a1;
+        color: #ffffff;
         text-decoration: none;
         font-family: sans-serif;
         font-size: 0.95rem;
@@ -101,17 +108,17 @@
       }
 
       .cta a:hover {
-        background: #81d4fa;
+        background: #0284c7;
       }
     </style>
   </head>
   <body>
-    <header>
-      <h1>Amblyopia <span>Games</span></h1>
+    <div class="page-hero">
+      <h1>Amblyopia<span>Labs</span></h1>
       <p class="tagline">
         A browser-based research platform for dichoptic amblyopia therapy.
       </p>
-    </header>
+    </div>
 
     <main>
       <section>
@@ -143,8 +150,8 @@
         <p>
           This platform implements that approach through browser-based games
           using standard red-cyan anaglyph glasses. Running entirely in the
-          browser means no installations, no device lock-in, and low barriers
-          to participation — practical for both clinical research settings and
+          browser means no installations, no device lock-in, and low barriers to
+          participation — practical for both clinical research settings and
           at-home use.
         </p>
       </section>
@@ -167,7 +174,7 @@
 
       <section class="cta">
         <p>Try the games — no login required, no personal data collected.</p>
-        <a href="/games/">Go to games &rarr;</a>
+        <a href="https://www.amblyopia.games">Go to games &rarr;</a>
       </section>
     </main>
   </body>

@@ -21,7 +21,7 @@ jobs:
           username: ${{ secrets.SFTP_USERNAME }}
           ssh_private_key: ${{ secrets.SFTP_PRIVATE_KEY }}
           local_path: ./public
-          remote_path: /var/www/amblyopia.games
+          remote_path: /var/www/amblyopialabs.com
           delete_remote_files_when_not_exist: true
 
       - name: Deploy server via SFTP
@@ -32,14 +32,29 @@ jobs:
           username: ${{ secrets.SFTP_USERNAME }}
           ssh_private_key: ${{ secrets.SFTP_PRIVATE_KEY }}
           local_path: ./server
-          remote_path: /var/www/amblyopia.games
+          remote_path: /var/www/amblyopialabs.com
           delete_remote_files_when_not_exist: true
 
-      - name: Restart server
+      - name: Deploy nginx config via SFTP
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+          server: ${{ secrets.SFTP_HOST }}
+          port: ${{ secrets.SFTP_PORT }}
+          username: ${{ secrets.SFTP_USERNAME }}
+          ssh_private_key: ${{ secrets.SFTP_PRIVATE_KEY }}
+          local_path: ./nginx
+          remote_path: /var/www/amblyopialabs.com
+          delete_remote_files_when_not_exist: true
+
+      - name: Reload nginx and restart app
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SFTP_HOST }}
           port: ${{ secrets.SFTP_PORT }}
           username: ${{ secrets.SFTP_USERNAME }}
           key: ${{ secrets.SFTP_PRIVATE_KEY }}
-          script: pm2 restart amblyopia.games
+          script: |
+            sudo cp /var/www/amblyopialabs.com/nginx/amblyopialabs.com.conf /etc/nginx/sites-available/amblyopialabs.com
+            sudo ln -sf /etc/nginx/sites-available/amblyopialabs.com /etc/nginx/sites-enabled/amblyopialabs.com
+            sudo nginx -t && sudo systemctl reload nginx
+            pm2 restart amblyopialabs.com
