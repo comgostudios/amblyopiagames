@@ -23,12 +23,34 @@
         position: fixed;
         top: 0;
         left: 0;
+        touch-action: none;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-tap-highlight-color: transparent;
       }
     </style>
   </head>
   <body>
     <canvas id="game"></canvas>
     <script>
+      // roundRect polyfill for iOS Safari < 15.4
+      if (!CanvasRenderingContext2D.prototype.roundRect) {
+        CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
+          r = typeof r === "number" ? r : Array.isArray(r) ? r[0] : 0;
+          r = Math.min(r, w / 2, h / 2);
+          this.moveTo(x + r, y);
+          this.lineTo(x + w - r, y);
+          this.arcTo(x + w, y, x + w, y + r, r);
+          this.lineTo(x + w, y + h - r);
+          this.arcTo(x + w, y + h, x + w - r, y + h, r);
+          this.lineTo(x + r, y + h);
+          this.arcTo(x, y + h, x, y + h - r, r);
+          this.lineTo(x, y + r);
+          this.arcTo(x, y, x + r, y, r);
+          this.closePath();
+        };
+      }
+
       const canvas = document.getElementById("game");
       const ctx = canvas.getContext("2d");
 
@@ -158,8 +180,11 @@
       const DASH_OFF = [];
 
       let paused = false;
+      let lastTouchEnd = 0;
+      canvas.addEventListener("touchend", () => { lastTouchEnd = Date.now(); });
 
       canvas.addEventListener("click", (e) => {
+        if (Date.now() - lastTouchEnd < 500) return;
         if (state === "playing") {
           paused = !paused;
           return;
@@ -252,7 +277,7 @@
 
         if (ball.y - BALL_RADIUS > H()) {
           state = "gameover";
-          document.exitPointerLock();
+          if (document.exitPointerLock) document.exitPointerLock();
         }
       }
 
