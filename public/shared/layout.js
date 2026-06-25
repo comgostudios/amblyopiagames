@@ -1,20 +1,21 @@
 (function () {
   const isGames = /^(www\.)?amblyopia\.games$/.test(location.hostname);
-  const isAuthPage = location.pathname.startsWith('/auth');
+  const isAuthPage = location.pathname.startsWith("/auth");
 
   // ── Google Analytics ─────────────────────────────────────────────────────
-  const gaId = isGames ? 'G-RZ74FQ0TFR' : 'G-V2SYXJZL63';
-  const gaScript = document.createElement('script');
+  const gaId = isGames ? "G-RZ74FQ0TFR" : "G-V2SYXJZL63";
+  const gaScript = document.createElement("script");
   gaScript.async = true;
   gaScript.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
   document.head.appendChild(gaScript);
-  const gaInit = document.createElement('script');
+  const gaInit = document.createElement("script");
   gaInit.textContent = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${gaId}');`;
   document.head.appendChild(gaInit);
 
   // ── Theme tokens ─────────────────────────────────────────────────────────
-  const varStyle = document.createElement('style');
-  varStyle.textContent = isGames ? `
+  const varStyle = document.createElement("style");
+  varStyle.textContent = isGames
+    ? `
     :root {
       --sl-header-bg:    #0a0e1a;
       --sl-header-bd:    #1e2740;
@@ -47,7 +48,8 @@
       --sl-footer-text:  #4a5a70;
       --sl-footer-hover: #8899bb;
     }
-  ` : `
+  `
+    : `
     :root {
       --sl-header-bg:    #f5f7fa;
       --sl-header-bd:    #e2e8f0;
@@ -84,7 +86,7 @@
   document.head.appendChild(varStyle);
 
   // ── Layout styles ─────────────────────────────────────────────────────────
-  const style = document.createElement('style');
+  const style = document.createElement("style");
   style.textContent = `
     .sl-header {
       padding: 20px 32px;
@@ -196,15 +198,19 @@
     : `<a href="/" class="sl-logo">Amblyopia<span>Labs</span></a>`;
 
   function buildNav() {
-    const raw = localStorage.getItem('al_user');
+    const raw = localStorage.getItem("al_user");
     const user = raw ? JSON.parse(raw) : null;
-    const token = localStorage.getItem('al_token');
+    const token = localStorage.getItem("al_token");
 
     if (user && token) {
       const nameParts = [user.firstName, user.lastName].filter(Boolean);
-      const displayName = nameParts.length ? nameParts.join(' ') : user.email;
+      const displayName = nameParts.length ? nameParts.join(" ") : user.email;
       const initials = nameParts.length
-        ? nameParts.map(p => p[0]).join('').toUpperCase().slice(0, 2)
+        ? nameParts
+            .map((p) => p[0])
+            .join("")
+            .toUpperCase()
+            .slice(0, 2)
         : user.email[0].toUpperCase();
 
       return `
@@ -218,7 +224,7 @@
             <div class="sl-dropdown-header">
               <div class="sl-dropdown-name">${displayName}</div>
               <div class="sl-dropdown-email">${user.email}</div>
-              <span class="sl-dropdown-role">${user.role || ''}</span>
+              <span class="sl-dropdown-role">${user.role || ""}</span>
             </div>
             <a href="/account/" class="sl-dropdown-item">My account</a>
             <button class="sl-dropdown-item sl-signout" onclick="slSignOut()">Sign out</button>
@@ -228,10 +234,10 @@
     }
 
     if (isGames) {
-      return `<a href="https://www.amblyopialabs.com" class="sl-nav-link">AmblyopiaLabs &rarr;</a>`;
+      return `<a href="https://www.amblyopialabs.com" class="sl-nav-link">AmblyopiaLabs</a>`;
     }
 
-    if (isAuthPage) return '';
+    if (isAuthPage) return "";
 
     const returnTo = encodeURIComponent(location.href);
     return `
@@ -240,30 +246,36 @@
     `;
   }
 
-  document.body.insertAdjacentHTML('afterbegin', `
+  document.body.insertAdjacentHTML(
+    "afterbegin",
+    `
     <header class="sl-header">
       ${logo}
       <nav class="sl-nav">${buildNav()}</nav>
     </header>
-  `);
+  `,
+  );
 
-  document.addEventListener('click', function (e) {
-    const menu = document.getElementById('sl-user-menu');
-    if (menu && !menu.contains(e.target)) menu.classList.remove('open');
+  document.addEventListener("click", function (e) {
+    const menu = document.getElementById("sl-user-menu");
+    if (menu && !menu.contains(e.target)) menu.classList.remove("open");
   });
 
   window.slSignOut = function () {
-    localStorage.removeItem('al_token');
-    localStorage.removeItem('al_user');
-    window.location.href = '/';
+    localStorage.removeItem("al_token");
+    localStorage.removeItem("al_user");
+    window.location.href = "/";
   };
 
   const year = new Date().getFullYear();
-  document.body.insertAdjacentHTML('beforeend', `
+  document.body.insertAdjacentHTML(
+    "beforeend",
+    `
     <footer class="sl-footer">
       <div class="sl-footer-inner">
         <span>&copy; ${year} AmblyopiaLabs</span>
       </div>
     </footer>
-  `);
+  `,
+  );
 })();
