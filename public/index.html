@@ -4,127 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AmblyopiaLabs — Research Platform</title>
+    <link rel="stylesheet" href="/shared/styles.css" />
     <script src="/shared/layout.js" defer></script>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      html { font-size: 18px; }
-
-      body {
-        font-family: Georgia, serif;
-        background: #ffffff;
-        color: #1e293b;
-        line-height: 1.7;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-      }
-
-      .page-hero {
-        max-width: 860px;
-        margin: 0 auto;
-        padding: 56px 32px 48px;
-        border-bottom: 1px solid #e2e8f0;
-        width: 100%;
-      }
-
-      .page-hero h1 {
-        font-size: 2.8rem;
-        font-weight: normal;
-        letter-spacing: -0.5px;
-        color: #1e293b;
-        margin-bottom: 16px;
-      }
-
-      .page-hero h1 span {
-        color: #0369a1;
-      }
-
-      .page-hero p.tagline {
-        font-size: 1.2rem;
-        color: #64748b;
-        max-width: 580px;
-      }
-
-      main {
-        max-width: 860px;
-        margin: 0 auto;
-        padding: 56px 32px 80px;
-        flex: 1;
-        width: 100%;
-      }
-
-      section {
-        margin-bottom: 56px;
-      }
-
-      h2 {
-        font-size: 1rem;
-        font-weight: normal;
-        text-transform: uppercase;
-        letter-spacing: 1.5px;
-        color: #0369a1;
-        margin-bottom: 16px;
-      }
-
-      p {
-        color: #475569;
-        max-width: 680px;
-        margin-bottom: 16px;
-      }
-
-      p:last-child {
-        margin-bottom: 0;
-      }
-
-      p strong {
-        color: #1e293b;
-      }
-
-      .cta {
-        border-top: 1px solid #e2e8f0;
-        padding-top: 48px;
-        margin-bottom: 0;
-      }
-
-      .cta p {
-        margin-bottom: 24px;
-      }
-
-      .cta a {
-        display: inline-block;
-        padding: 14px 28px;
-        background: #0369a1;
-        color: #ffffff;
-        text-decoration: none;
-        font-family: sans-serif;
-        font-size: 0.95rem;
-        font-weight: 600;
-        letter-spacing: 0.3px;
-        border-radius: 4px;
-        transition: background 0.15s;
-      }
-
-      .cta a:hover {
-        background: #0284c7;
-      }
-    </style>
   </head>
   <body>
-    <div class="page-hero">
-      <h1>Amblyopia<span>Labs</span></h1>
-      <p class="tagline">
+    <div class="hero">
+      <h1 class="hero-title">Amblyopia<span>Labs</span></h1>
+      <p class="hero-tagline">
         A browser-based research platform for dichoptic amblyopia therapy.
       </p>
     </div>
 
-    <main>
-      <section>
-        <h2>The problem</h2>
+    <main class="page-content">
+      <section class="content-section">
+        <h2 class="section-heading">The problem</h2>
         <p>
           Amblyopia — commonly known as lazy eye — affects roughly
           <strong>3% of the population</strong> and develops when the brain
@@ -139,8 +32,8 @@
         </p>
       </section>
 
-      <section>
-        <h2>The approach</h2>
+      <section class="content-section">
+        <h2 class="section-heading">The approach</h2>
         <p>
           Promising clinical research suggests that
           <strong>dichoptic stimulation</strong> — presenting different visual
@@ -158,8 +51,8 @@
         </p>
       </section>
 
-      <section>
-        <h2>Status</h2>
+      <section class="content-section">
+        <h2 class="section-heading">Status</h2>
         <p>
           This is an <strong>early-stage research prototype</strong>, not a
           validated clinical tool. The games are functional and playable.
@@ -174,9 +67,9 @@
         </p>
       </section>
 
-      <section class="cta">
+      <section class="content-section cta-section">
         <p>Try the games — no login required, no personal data collected.</p>
-        <a href="/games/">Go to games &rarr;</a>
+        <a href="/games/" class="btn-cta">Go to games &rarr;</a>
       </section>
     </main>
   </body>

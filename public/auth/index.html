@@ -4,254 +4,42 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign In — AmblyopiaLabs</title>
+    <link rel="stylesheet" href="/shared/styles.css" />
     <script src="/shared/layout.js" defer></script>
-    <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-
-      html { font-size: 18px; }
-
-      body {
-        font-family: Georgia, serif;
-        background: #ffffff;
-        color: #1e293b;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-      }
-
-      main {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 48px 24px;
-      }
-
-      .card {
-        width: 100%;
-        max-width: 420px;
-      }
-
-      h1 {
-        font-size: 1.8rem;
-        font-weight: normal;
-        color: #1e293b;
-        margin-bottom: 8px;
-      }
-
-      .subtitle {
-        color: #64748b;
-        font-size: 0.95rem;
-        margin-bottom: 40px;
-        line-height: 1.5;
-      }
-
-      .field { margin-bottom: 0; }
-
-      label {
-        display: block;
-        font-family: sans-serif;
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        letter-spacing: 1.2px;
-        color: #64748b;
-        margin-bottom: 10px;
-      }
-
-      input[type="email"],
-      input[type="text"] {
-        width: 100%;
-        padding: 14px 16px;
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-radius: 4px;
-        color: #1e293b;
-        font-family: Georgia, serif;
-        font-size: 1rem;
-        outline: none;
-        transition: border-color 0.15s;
-      }
-
-      input[type="email"]:focus,
-      input[type="text"]:focus { border-color: #0369a1; }
-
-      .role-section { margin-top: 28px; }
-
-      .role-group {
-        display: flex;
-        gap: 12px;
-      }
-
-      .role-btn {
-        flex: 1;
-        padding: 14px 12px;
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-radius: 4px;
-        color: #64748b;
-        font-family: sans-serif;
-        font-size: 0.9rem;
-        cursor: pointer;
-        transition: all 0.15s;
-        text-align: center;
-        user-select: none;
-      }
-
-      .role-btn:hover { border-color: #cbd5e1; color: #334155; }
-
-      .role-btn.selected {
-        border-color: #0369a1;
-        color: #0369a1;
-        background: rgba(3, 105, 161, 0.07);
-      }
-
-      .submit-btn {
-        width: 100%;
-        margin-top: 32px;
-        padding: 14px;
-        background: #0369a1;
-        color: #ffffff;
-        border: none;
-        border-radius: 4px;
-        font-family: sans-serif;
-        font-size: 0.95rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background 0.15s;
-        letter-spacing: 0.3px;
-      }
-
-      .submit-btn:hover:not(:disabled) { background: #0284c7; }
-
-      .submit-btn:disabled {
-        background: #e2e8f0;
-        color: #94a3b8;
-        cursor: not-allowed;
-      }
-
-      .otp-group {
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-        margin: 8px 0;
-      }
-
-      .otp-digit {
-        width: 52px;
-        height: 64px;
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-radius: 4px;
-        color: #1e293b;
-        font-family: sans-serif;
-        font-size: 1.6rem;
-        text-align: center;
-        outline: none;
-        transition: border-color 0.15s;
-        caret-color: transparent;
-      }
-
-      .otp-digit:focus { border-color: #0369a1; }
-
-      .error {
-        color: #dc2626;
-        font-family: sans-serif;
-        font-size: 0.85rem;
-        margin-top: 16px;
-        min-height: 20px;
-        line-height: 1.4;
-      }
-
-      .back-link {
-        display: block;
-        margin-top: 24px;
-        color: #64748b;
-        font-family: sans-serif;
-        font-size: 0.85rem;
-        cursor: pointer;
-        text-align: center;
-        transition: color 0.15s;
-        background: none;
-        border: none;
-        width: 100%;
-      }
-
-      .back-link:hover { color: #0369a1; }
-
-      .step { display: none; }
-      .step.active { display: block; }
-
-      .resend-row {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        margin-top: 20px;
-        font-family: sans-serif;
-        font-size: 0.85rem;
-        color: #64748b;
-      }
-
-      .resend-btn {
-        background: none;
-        border: none;
-        color: #0369a1;
-        font-family: sans-serif;
-        font-size: 0.85rem;
-        cursor: pointer;
-        padding: 0;
-      }
-
-      .resend-btn:disabled { color: #94a3b8; cursor: not-allowed; }
-
-      .success-check {
-        width: 56px;
-        height: 56px;
-        border-radius: 50%;
-        background: rgba(3, 105, 161, 0.08);
-        border: 1px solid rgba(3, 105, 161, 0.25);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 24px;
-        font-size: 1.4rem;
-        color: #0369a1;
-      }
-    </style>
   </head>
   <body>
-    <main>
-      <div class="card">
+    <main class="auth-wrap">
+      <div class="auth-card">
 
         <!-- Step 1: Email + Role -->
-        <div class="step active" id="step-email">
-          <h1 id="page-title">Sign in</h1>
-          <p class="subtitle" id="page-subtitle">We'll send a one-time passcode to your email — no password needed.</p>
+        <div class="auth-step active" id="step-email">
+          <h1 class="auth-heading" id="page-title">Sign in</h1>
+          <p class="auth-subtitle" id="page-subtitle">We'll send a one-time passcode to your email — no password needed.</p>
 
-          <div class="field" style="margin-top: 20px">
-            <label for="email">Email address</label>
-            <input type="email" id="email" placeholder="you@example.com" autocomplete="email" />
+          <div class="form-field" style="margin-top: 20px">
+            <label class="form-label" for="email">Email address</label>
+            <input class="text-input" type="email" id="email" placeholder="you@example.com" autocomplete="email" />
           </div>
 
-          <div class="role-section" id="role-section">
-            <label>I am a</label>
-            <div class="role-group">
-              <div class="role-btn" id="role-patient" onclick="selectRole('patient')">Patient</div>
-              <div class="role-btn" id="role-clinician" onclick="selectRole('clinician')">Clinician</div>
+          <div class="role-picker" id="role-section">
+            <label class="form-label">I am a</label>
+            <div class="role-options">
+              <div class="role-option" id="role-patient" onclick="selectRole('patient')">Patient</div>
+              <div class="role-option" id="role-clinician" onclick="selectRole('clinician')">Clinician</div>
             </div>
           </div>
 
-          <button class="submit-btn" id="send-btn" onclick="requestPasscode()" disabled>Send passcode</button>
-          <div class="error" id="email-error"></div>
+          <button class="btn-submit" id="send-btn" onclick="requestPasscode()" disabled>Send passcode</button>
+          <div class="form-error" id="email-error"></div>
         </div>
 
         <!-- Step 2: OTP -->
-        <div class="step" id="step-otp">
-          <h1>Check your email</h1>
-          <p class="subtitle" id="otp-subtitle">We sent a 6-digit code to your address.</p>
+        <div class="auth-step" id="step-otp">
+          <h1 class="auth-heading">Check your email</h1>
+          <p class="auth-subtitle" id="otp-subtitle">We sent a 6-digit code to your address.</p>
 
           <div style="margin-top: 32px">
-            <label style="text-align:center; margin-bottom: 20px">Passcode</label>
+            <label class="form-label" style="text-align:center; margin-bottom: 20px">Passcode</label>
             <div class="otp-group" id="otp-group">
               <input class="otp-digit" id="d0" inputmode="numeric" />
               <input class="otp-digit" id="d1" inputmode="numeric" />
@@ -262,22 +50,22 @@
             </div>
           </div>
 
-          <button class="submit-btn" id="verify-btn" onclick="verifyPasscode()" disabled>Verify</button>
-          <div class="error" id="otp-error"></div>
+          <button class="btn-submit" id="verify-btn" onclick="verifyPasscode()" disabled>Verify</button>
+          <div class="form-error" id="otp-error"></div>
 
-          <div class="resend-row">
+          <div class="otp-resend-row">
             Didn't receive it?
-            <button class="resend-btn" id="resend-btn" onclick="resendPasscode()">Resend</button>
+            <button class="otp-resend-btn" id="resend-btn" onclick="resendPasscode()">Resend</button>
           </div>
 
-          <button class="back-link" onclick="goBack()">← Use a different email</button>
+          <button class="auth-back-btn" onclick="goBack()">← Use a different email</button>
         </div>
 
         <!-- Step 3: Success -->
-        <div class="step" id="step-success">
-          <div class="success-check">✓</div>
-          <h1>You're in</h1>
-          <p class="subtitle" id="success-msg">Signed in successfully. Redirecting...</p>
+        <div class="auth-step" id="step-success">
+          <div class="auth-success-icon">✓</div>
+          <h1 class="auth-heading">You're in</h1>
+          <p class="auth-subtitle" id="success-msg">Signed in successfully. Redirecting...</p>
         </div>
 
       </div>
@@ -297,7 +85,6 @@
       let selectedRole = null;
       let userEmail = null;
 
-      // Input validation listeners
       const emailInput = document.getElementById('email');
       emailInput.addEventListener('input', updateSendBtn);
       emailInput.addEventListener('keydown', e => { if (e.key === 'Enter') requestPasscode(); });
@@ -316,7 +103,6 @@
         document.getElementById('send-btn').disabled = !(validEmail && validRole);
       }
 
-      // OTP digit inputs
       const digits = Array.from({ length: 6 }, (_, i) => document.getElementById(`d${i}`));
 
       digits.forEach((input, i) => {
@@ -365,7 +151,7 @@
       }
 
       function showStep(id) {
-        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.auth-step').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
       }
 
