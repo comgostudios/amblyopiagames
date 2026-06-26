@@ -1,10 +1,10 @@
 (function () {
-  const isGames = /^(www\.)?amblyopia\.games$/.test(location.hostname)
-    || location.pathname.startsWith('/games');
+  const isLabs = /^(www\.)?amblyopialabs\.com$/.test(location.hostname)
+    || location.pathname.startsWith('/labs');
   const isAuthPage = location.pathname.startsWith("/auth");
 
   // ── Google Analytics ─────────────────────────────────────────────────────
-  const gaId = isGames ? "G-RZ74FQ0TFR" : "G-V2SYXJZL63";
+  const gaId = isLabs ? "G-V2SYXJZL63" : "G-RZ74FQ0TFR";
   const gaScript = document.createElement("script");
   gaScript.async = true;
   gaScript.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
@@ -15,42 +15,8 @@
 
   // ── Theme tokens ─────────────────────────────────────────────────────────
   const varStyle = document.createElement("style");
-  varStyle.textContent = isGames
+  varStyle.textContent = isLabs
     ? `
-    :root {
-      --sl-header-bg:    #0a0e1a;
-      --sl-header-bd:    #1e2740;
-      --sl-logo:         #ffffff;
-      --sl-logo-accent:  #4fc3f7;
-      --sl-nav-link:     #8899bb;
-      --sl-nav-hover:    #e8eaf0;
-      --sl-btn-bg:       #4fc3f7;
-      --sl-btn-text:     #0a0e1a;
-      --sl-btn-hover:    #81d4fa;
-      --sl-ubtn-bd:      #1e2740;
-      --sl-ubtn-bd-h:    #2e4060;
-      --sl-ubtn-text:    #c5cfe8;
-      --sl-ubtn-text-h:  #e8eaf0;
-      --sl-avatar-bg:    #1e2740;
-      --sl-avatar-bd:    #2e4060;
-      --sl-avatar-text:  #4fc3f7;
-      --sl-drop-bg:      #0f1525;
-      --sl-drop-bd:      #1e2740;
-      --sl-drop-shadow:  0 8px 24px rgba(0,0,0,0.4);
-      --sl-drop-name:    #e8eaf0;
-      --sl-drop-email:   #5a6a80;
-      --sl-drop-role:    #4fc3f7;
-      --sl-drop-item:    #8899bb;
-      --sl-drop-item-h-bg:   #1a2540;
-      --sl-drop-item-h-text: #e8eaf0;
-      --sl-signout:      #f87171;
-      --sl-signout-h-bg: rgba(248,113,113,0.08);
-      --sl-footer-bd:    #1e2740;
-      --sl-footer-text:  #4a5a70;
-      --sl-footer-hover: #8899bb;
-    }
-  `
-    : `
     :root {
       --sl-header-bg:    #f5f7fa;
       --sl-header-bd:    #e2e8f0;
@@ -82,6 +48,40 @@
       --sl-footer-bd:    #e2e8f0;
       --sl-footer-text:  #94a3b8;
       --sl-footer-hover: #64748b;
+    }
+  `
+    : `
+    :root {
+      --sl-header-bg:    #0a0e1a;
+      --sl-header-bd:    #1e2740;
+      --sl-logo:         #ffffff;
+      --sl-logo-accent:  #4fc3f7;
+      --sl-nav-link:     #8899bb;
+      --sl-nav-hover:    #e8eaf0;
+      --sl-btn-bg:       #4fc3f7;
+      --sl-btn-text:     #0a0e1a;
+      --sl-btn-hover:    #81d4fa;
+      --sl-ubtn-bd:      #1e2740;
+      --sl-ubtn-bd-h:    #2e4060;
+      --sl-ubtn-text:    #c5cfe8;
+      --sl-ubtn-text-h:  #e8eaf0;
+      --sl-avatar-bg:    #1e2740;
+      --sl-avatar-bd:    #2e4060;
+      --sl-avatar-text:  #4fc3f7;
+      --sl-drop-bg:      #0f1525;
+      --sl-drop-bd:      #1e2740;
+      --sl-drop-shadow:  0 8px 24px rgba(0,0,0,0.4);
+      --sl-drop-name:    #e8eaf0;
+      --sl-drop-email:   #5a6a80;
+      --sl-drop-role:    #4fc3f7;
+      --sl-drop-item:    #8899bb;
+      --sl-drop-item-h-bg:   #1a2540;
+      --sl-drop-item-h-text: #e8eaf0;
+      --sl-signout:      #f87171;
+      --sl-signout-h-bg: rgba(248,113,113,0.08);
+      --sl-footer-bd:    #1e2740;
+      --sl-footer-text:  #4a5a70;
+      --sl-footer-hover: #8899bb;
     }
   `;
   document.head.appendChild(varStyle);
@@ -194,14 +194,16 @@
   document.head.appendChild(style);
 
   // ── Header & footer ───────────────────────────────────────────────────────
-  const logo = isGames
-    ? `<a href="/" class="sl-logo">Amblyopia<span>.games</span></a>`
-    : `<a href="/" class="sl-logo">Amblyopia<span>Labs</span></a>`;
+  const logo = isLabs
+    ? `<a href="/" class="sl-logo">Amblyopia<span>Labs</span></a>`
+    : `<a href="/" class="sl-logo">Amblyopia<span>.games</span></a>`;
 
   function buildNav() {
     const raw = localStorage.getItem("al_user");
     const user = raw ? JSON.parse(raw) : null;
     const token = localStorage.getItem("al_token");
+
+    const authOrigin = isLabs ? "" : "https://www.amblyopialabs.com";
 
     if (user && token) {
       const nameParts = [user.firstName, user.lastName].filter(Boolean);
@@ -227,23 +229,19 @@
               <div class="sl-dropdown-email">${user.email}</div>
               <span class="sl-dropdown-role">${user.role || ""}</span>
             </div>
-            <a href="/account/" class="sl-dropdown-item">My account</a>
+            <a href="${authOrigin}/account/" class="sl-dropdown-item">My account</a>
             <button class="sl-dropdown-item sl-signout" onclick="slSignOut()">Sign out</button>
           </div>
         </div>
       `;
     }
 
-    if (isGames) {
-      return `<a href="https://www.amblyopialabs.com" class="sl-nav-link">AmblyopiaLabs</a>`;
-    }
-
     if (isAuthPage) return "";
 
     const returnTo = encodeURIComponent(location.href);
     return `
-      <a href="/auth/?mode=signin&returnTo=${returnTo}">Sign in</a>
-      <a href="/auth/?mode=signup&returnTo=${returnTo}" class="sl-primary">Sign up</a>
+      <a href="${authOrigin}/auth/?mode=signin&returnTo=${returnTo}">Sign in</a>
+      <a href="${authOrigin}/auth/?mode=signup&returnTo=${returnTo}" class="sl-primary">Sign up</a>
     `;
   }
 

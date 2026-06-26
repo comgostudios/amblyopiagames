@@ -13,7 +13,7 @@ async function getAccount(req, res, next) {
     const db = getDB();
     const user = await db.collection('users').findOne(
       { email: req.user.email },
-      { projection: { _id: 0, email: 1, firstName: 1, lastName: 1, dateOfBirth: 1, role: 1, clinicCode: 1, createdAt: 1, lastLogin: 1 } }
+      { projection: { _id: 0, email: 1, firstName: 1, lastName: 1, dateOfBirth: 1, role: 1, clinicCode: 1, createdAt: 1, lastLogin: 1, calibrationBg: 1 } }
     );
     if (!user) return res.status(404).json({ error: 'Account not found.' });
     res.json(user);
@@ -23,10 +23,12 @@ async function getAccount(req, res, next) {
 }
 
 const DOB_RE = /^\d{4}-\d{2}-\d{2}$/;
+const HEX_COLOR_RE = /^#[0-9a-f]{3}([0-9a-f]{3})?$/i;
 
 async function updateAccount(req, res, next) {
   try {
-    const { firstName, lastName, dateOfBirth } = req.body;
+    console.log('[updateAccount] body:', JSON.stringify(req.body), '| user:', req.user?.email);
+    const { firstName, lastName, dateOfBirth, calibrationBg } = req.body;
 
     if (firstName !== undefined && typeof firstName !== 'string')
       return res.status(400).json({ error: 'Invalid firstName.' });
@@ -34,11 +36,14 @@ async function updateAccount(req, res, next) {
       return res.status(400).json({ error: 'Invalid lastName.' });
     if (dateOfBirth !== undefined && (typeof dateOfBirth !== 'string' || !DOB_RE.test(dateOfBirth)))
       return res.status(400).json({ error: 'Date of birth must be in YYYY-MM-DD format.' });
+    if (calibrationBg !== undefined && (typeof calibrationBg !== 'string' || !HEX_COLOR_RE.test(calibrationBg)))
+      return res.status(400).json({ error: 'Invalid color.' });
 
     const update = {};
     if (firstName !== undefined) update.firstName = firstName.trim();
     if (lastName !== undefined) update.lastName = lastName.trim();
     if (dateOfBirth !== undefined) update.dateOfBirth = dateOfBirth;
+    if (calibrationBg !== undefined) update.calibrationBg = calibrationBg.toLowerCase();
     if (!Object.keys(update).length)
       return res.status(400).json({ error: 'Nothing to update.' });
 
