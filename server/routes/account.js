@@ -27,7 +27,6 @@ const HEX_COLOR_RE = /^#[0-9a-f]{3}([0-9a-f]{3})?$/i;
 
 async function updateAccount(req, res, next) {
   try {
-    console.log('[updateAccount] body:', JSON.stringify(req.body), '| user:', req.user?.email);
     const { firstName, lastName, dateOfBirth, calibrationBg } = req.body;
 
     if (firstName !== undefined && typeof firstName !== 'string')
