@@ -9,9 +9,10 @@ const requireAuth = require('./middleware/requireAuth');
 
 const PORT = process.env.PORT || 3000;
 const PUBLIC_DIR = path.join(__dirname, '..', 'public');
-const GAMES_HOSTS = ['amblyopia.games', 'www.amblyopia.games'];
+const LABS_HOSTS = ['amblyopialabs.com', 'www.amblyopialabs.com'];
 
 const app = express();
+app.set('trust proxy', 1);
 app.use(express.json());
 
 const authLimiter = rateLimit({
@@ -29,18 +30,9 @@ app.patch('/api/account', requireAuth, updateAccount);
 app.post('/api/account/email/request', authLimiter, requireAuth, requestEmailChange);
 app.post('/api/account/email/verify', authLimiter, requireAuth, verifyEmailChange);
 
-app.use((req, res, next) => {
-  const host = (req.headers.host || '').split(':')[0];
-  if (!GAMES_HOSTS.includes(host) && host !== 'localhost' && req.path.startsWith('/games')) {
-    const rest = req.path.slice('/games'.length) || '/';
-    return res.redirect(301, 'https://www.amblyopia.games' + rest);
-  }
-  next();
-});
-
 app.use((req, res) => {
   const host = (req.headers.host || '').split(':')[0];
-  const root = GAMES_HOSTS.includes(host) ? path.join(PUBLIC_DIR, 'games') : PUBLIC_DIR;
+  const root = LABS_HOSTS.includes(host) ? path.join(PUBLIC_DIR, 'labs') : PUBLIC_DIR;
   const decoded = decodeURIComponent(req.path);
   let filePath = path.join(root, decoded);
 
