@@ -3,135 +3,438 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Amblyopia.games</title>
+    <title>Amblyopia.games — Track therapy. Train vision. Monitor progress.</title>
     <link rel="stylesheet" href="shared/styles.css" />
     <script src="shared/layout.js" defer></script>
+    <style>
+      .hero {
+        padding: 72px 32px 60px;
+      }
+      .hero-headline {
+        font-size: 2.6rem;
+        font-weight: normal;
+        color: #1e293b;
+        letter-spacing: -0.5px;
+        line-height: 1.25;
+        margin-bottom: 20px;
+        max-width: 680px;
+      }
+      .hero-sub {
+        font-size: 1.1rem;
+        color: #334155;
+        max-width: 580px;
+        margin-bottom: 10px;
+      }
+      .hero-desc {
+        font-size: 0.95rem;
+        color: #64748b;
+        max-width: 580px;
+        margin-bottom: 36px;
+      }
+      .hero-ctas {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 40px;
+      }
+      .btn-primary {
+        display: inline-block;
+        padding: 14px 32px;
+        background: #0369a1;
+        color: #ffffff;
+        text-decoration: none;
+        font-family: sans-serif;
+        font-size: 0.95rem;
+        font-weight: 700;
+        border-radius: 4px;
+        transition: background 0.15s;
+      }
+      .btn-primary:hover { background: #0284c7; }
+      .btn-outline {
+        display: inline-block;
+        padding: 14px 32px;
+        border: 1px solid #e2e8f0;
+        color: #475569;
+        text-decoration: none;
+        font-family: sans-serif;
+        font-size: 0.95rem;
+        font-weight: 600;
+        border-radius: 4px;
+        transition: border-color 0.15s, color 0.15s;
+      }
+      .btn-outline:hover { border-color: #0369a1; color: #0369a1; }
+      .hero-trust {
+        font-family: sans-serif;
+        font-size: 0.8rem;
+        color: #94a3b8;
+      }
+
+      /* Sections */
+      .content-section {
+        border-top: 1px solid #e2e8f0;
+        padding: 56px 0;
+      }
+      .section-title {
+        font-size: 1.4rem;
+        font-weight: normal;
+        color: #1e293b;
+        letter-spacing: -0.3px;
+        margin-bottom: 40px;
+      }
+
+      /* How it works */
+      .how-steps { display: grid; gap: 44px; }
+      .how-step { display: grid; grid-template-columns: 40px 1fr; gap: 20px; }
+      @media (min-width: 1024px) {
+        .how-steps { grid-template-columns: repeat(3, 1fr); gap: 48px; }
+      }
+      .how-step-num {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #f0f9ff;
+        border: 1px solid #bae6fd;
+        color: #0369a1;
+        font-family: sans-serif;
+        font-size: 0.85rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+      .how-step-title {
+        font-size: 1.05rem;
+        font-weight: normal;
+        color: #1e293b;
+        margin-bottom: 10px;
+      }
+      .how-step-body {
+        font-size: 0.95rem;
+        color: #64748b;
+        margin-bottom: 14px;
+      }
+      .check-list {
+        list-style: none;
+        display: grid;
+        gap: 7px;
+        margin-bottom: 16px;
+      }
+      .check-list li {
+        font-family: sans-serif;
+        font-size: 0.9rem;
+        color: #334155;
+        display: flex;
+        align-items: baseline;
+        gap: 9px;
+      }
+      .check-list li::before {
+        content: '✓';
+        color: #0369a1;
+        font-size: 0.8rem;
+        flex-shrink: 0;
+      }
+      .how-step-note {
+        font-size: 0.88rem;
+        color: #94a3b8;
+        font-family: sans-serif;
+      }
+
+      /* Persona cards */
+      .persona-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+      }
+      .persona-card {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 24px 28px;
+      }
+      .persona-label {
+        font-family: sans-serif;
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: #0369a1;
+        margin-bottom: 10px;
+      }
+      .persona-body {
+        font-size: 0.95rem;
+        color: #475569;
+      }
+
+      /* Why grid */
+      .why-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 32px 40px;
+      }
+      .why-label {
+        font-family: sans-serif;
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: #0369a1;
+        margin-bottom: 8px;
+      }
+      .why-body {
+        font-size: 0.95rem;
+        color: #475569;
+      }
+
+      /* Dashboard preview */
+      .dashboard-list {
+        list-style: none;
+        display: grid;
+        gap: 10px;
+      }
+      .dashboard-list li {
+        font-family: sans-serif;
+        font-size: 0.95rem;
+        color: #334155;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .dashboard-list li::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #0369a1;
+        flex-shrink: 0;
+      }
+
+      /* Research callout */
+      .research-callout {
+        background: #f0f9ff;
+        border: 1px solid #bae6fd;
+        border-left: 3px solid #0369a1;
+        border-radius: 4px;
+        padding: 24px 28px;
+        max-width: 640px;
+      }
+      .research-callout-label {
+        font-family: sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: #0369a1;
+        margin-bottom: 10px;
+      }
+      .research-callout-body {
+        font-family: sans-serif;
+        font-size: 0.92rem;
+        color: #334155;
+        line-height: 1.65;
+        margin-bottom: 14px;
+      }
+      .research-callout-link {
+        font-family: sans-serif;
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: #0369a1;
+        text-decoration: none;
+      }
+      .research-callout-link:hover { text-decoration: underline; }
+
+      /* Disclaimer */
+      .disclaimer-box {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 24px 28px;
+      }
+      .disclaimer-label {
+        font-family: sans-serif;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: #94a3b8;
+        margin-bottom: 12px;
+      }
+      .disclaimer-box p {
+        font-family: sans-serif;
+        font-size: 0.85rem;
+        color: #64748b;
+        line-height: 1.6;
+        margin-bottom: 8px;
+      }
+      .disclaimer-box p:last-child { margin-bottom: 0; }
+
+      /* Learn more */
+      .learn-body {
+        font-size: 0.95rem;
+        color: #64748b;
+        margin-bottom: 20px;
+      }
+      .labs-link {
+        display: inline-block;
+        color: #0369a1;
+        font-family: sans-serif;
+        font-size: 0.95rem;
+        text-decoration: none;
+        margin-bottom: 32px;
+      }
+      .labs-link:hover { text-decoration: underline; }
+      .powered-by {
+        font-family: sans-serif;
+        font-size: 0.8rem;
+        color: #94a3b8;
+        margin-top: 12px;
+      }
+    </style>
   </head>
   <body>
     <div class="hero">
-      <h1 class="hero-title">Amblyopia<span>.games</span></h1>
-      <p class="hero-tagline">
-        Browser-based dichoptic therapy games for research purposes
-      </p>
+      <h1 class="hero-headline">Track therapy.<br>Train vision.<br>Monitor progress.</h1>
+      <p class="hero-sub">Interactive amblyopia exercises and treatment tracking for patients, parents, and clinicians.</p>
+      <p class="hero-desc">Combine patching routines, dichoptic training games, and progress monitoring in one browser-based platform — no downloads required.</p>
+      <div class="hero-ctas">
+        <a href="/auth/?mode=signup" class="btn-primary">Start Free</a>
+        <a href="#how-it-works" class="btn-outline">How it Works</a>
+      </div>
+      <p class="hero-trust">Trusted by patients, families, and clinicians exploring modern approaches to amblyopia care.</p>
     </div>
 
     <main class="page-content">
-      <h2 class="section-heading">Why Amblyopia Games?</h2>
-      <p class="page-intro">
-        Promising research suggests that
-        <strong>dichoptic game-based therapy</strong>
-        — presenting different images to each eye simultaneously — may produce
-        stronger outcomes than traditional patching for amblyopia (lazy eye).
-        This project explores that approach in a browser, making it easy to
-        study and refine without any downloads or device lock-in.
-      </p>
 
-      <div class="features">
-        <div>
-          <h2 class="feature-heading">Browser-based and accessible</h2>
-          <p class="feature-body">
-            Running entirely in the browser removes barriers to participation —
-            no app installs, no specialized hardware.
-            <strong>Any device with a screen and internet access</strong> is
-            enough to take part in a session.
-          </p>
+      <section class="content-section" id="how-it-works">
+        <h2 class="section-title">How it works</h2>
+        <div class="how-steps">
+
+          <div class="how-step">
+            <div class="how-step-num">1</div>
+            <div>
+              <h3 class="how-step-title">Track your treatment plan</h3>
+              <p class="how-step-body">Keep all therapy activity in one place:</p>
+              <ul class="check-list">
+                <li>Patching time tracking</li>
+                <li>Daily reminders</li>
+                <li>Session history</li>
+                <li>Progress over time</li>
+                <li>Treatment streaks</li>
+              </ul>
+              <p class="how-step-note">Stay consistent and see how your therapy habits evolve.</p>
+            </div>
+          </div>
+
+          <div class="how-step">
+            <div class="how-step-num">2</div>
+            <div>
+              <h3 class="how-step-title">Train using interactive exercises</h3>
+              <p class="how-step-body">Engaging browser-based visual activities designed to support binocular stimulation and visual training. Exercises may include:</p>
+              <ul class="check-list">
+                <li>Dichoptic exercises using red-cyan glasses</li>
+                <li>Visual attention activities</li>
+                <li>Contrast-based tasks</li>
+                <li>Adaptive difficulty levels</li>
+              </ul>
+              <p class="how-step-note">No app installs required. Start directly in your browser.</p>
+            </div>
+          </div>
+
+          <div class="how-step">
+            <div class="how-step-num">3</div>
+            <div>
+              <h3 class="how-step-title">Share progress with your clinician</h3>
+              <p class="how-step-body">Patients and clinicians can work together using shared dashboards. Clinicians can:</p>
+              <ul class="check-list">
+                <li>Monitor patient adherence</li>
+                <li>Review therapy activity</li>
+                <li>Track session trends</li>
+                <li>Adjust recommendations</li>
+              </ul>
+            </div>
+          </div>
+
         </div>
+      </section>
 
-        <div>
-          <h2 class="feature-heading">Dichoptic stimulation</h2>
-          <p class="feature-body">
-            Each game delivers
-            <strong>different visual input to each eye</strong>
-            simultaneously using anaglyph (red-cyan) glasses. This is the core
-            mechanism under investigation — training binocular cooperation
-            rather than suppressing the fellow eye as patching does.
-          </p>
-        </div>
-
-        <div>
-          <h2 class="feature-heading">Controlled difficulty</h2>
-          <p class="feature-body">
-            Contrast, speed, and task complexity can be adjusted per session.
-            Keeping the weaker eye
-            <strong
-              >consistently challenged without inducing suppression</strong
-            >
-            is a key variable the research aims to understand better.
-          </p>
-        </div>
-
-        <div>
-          <h2 class="feature-heading">Lightweight data collection</h2>
-          <p class="feature-body">
-            Session outcomes — score, duration, and difficulty level — are
-            logged to support analysis.
-            <strong>No personal data is collected</strong>; the focus is on
-            aggregate performance trends across sessions.
-          </p>
-        </div>
-
-        <div>
-          <h2 class="feature-heading">Early stage</h2>
-          <p class="feature-body">
-            This is a research prototype, not a clinical tool. Results are
-            exploratory. <strong>Feedback from participants</strong> and
-            collaborating clinicians will actively shape the direction of the
-            work.
-          </p>
-        </div>
-      </div>
-
-      <h2 class="section-heading">What you will need</h2>
-      <div class="setup-steps">
-        <div class="setup-step">
-          <div class="step-num">1</div>
-          <div class="step-content">
-            <h3>A professional recommendation</h3>
-            <p>
-              Dichoptic therapy is not suitable for everyone with amblyopia.
-              <strong>An optometrist or ophthalmologist can confirm</strong>
-              whether binocular stimulation is appropriate for your case and
-              advise on session frequency and duration.
-            </p>
+      <section class="content-section">
+        <h2 class="section-title">Designed for everyone involved in amblyopia care</h2>
+        <div class="persona-grid">
+          <div class="persona-card">
+            <div class="persona-label">Patients</div>
+            <p class="persona-body">Build consistent habits and visualize your progress.</p>
+          </div>
+          <div class="persona-card">
+            <div class="persona-label">Parents &amp; caregivers</div>
+            <p class="persona-body">Support therapy routines with reminders and simple tracking.</p>
+          </div>
+          <div class="persona-card">
+            <div class="persona-label">Clinicians</div>
+            <p class="persona-body">Monitor patient adherence and understand treatment patterns over time.</p>
           </div>
         </div>
+      </section>
 
-        <div class="setup-step">
-          <div class="step-num">2</div>
-          <div class="step-content">
-            <h3>Red-cyan anaglyph glasses</h3>
-            <p>
-              The games use color filtering to send different images to each
-              eye. Standard <strong>red-cyan 3D glasses</strong> — the kind used
-              for old-style 3D movies — work perfectly and are widely available
-              online for a few dollars.
-            </p>
+      <section class="content-section">
+        <h2 class="section-title">Why Amblyopia.games?</h2>
+        <div class="why-grid">
+          <div>
+            <div class="why-label">Browser-based</div>
+            <p class="why-body">No downloads. Access your account from any modern device.</p>
+          </div>
+          <div>
+            <div class="why-label">Progress-focused</div>
+            <p class="why-body">Measure activity and consistency instead of relying on memory.</p>
+          </div>
+          <div>
+            <div class="why-label">Adaptive</div>
+            <p class="why-body">Exercises can adjust difficulty over time.</p>
+          </div>
+          <div>
+            <div class="why-label">Research-driven</div>
+            <p class="why-body">Developed using emerging evidence around binocular approaches and treatment adherence.</p>
           </div>
         </div>
+      </section>
 
-        <div class="setup-step">
-          <div class="step-num">3</div>
-          <div class="step-content">
-            <h3>Create a free account</h3>
-            <p>
-              Creating an account lets you (and your clinician, if applicable)
-              track session history over time.
-              <strong>Progress — or lack of it — is useful data.</strong>
-              No payment or personal health information is required to sign up.
-            </p>
-          </div>
-        </div>
-      </div>
+      <section class="content-section">
+        <h2 class="section-title">Progress dashboard</h2>
+        <ul class="dashboard-list">
+          <li>Patching time history</li>
+          <li>Exercise completion rates</li>
+          <li>Session trends</li>
+          <li>Weekly activity summaries</li>
+          <li>Treatment adherence metrics</li>
+        </ul>
+      </section>
 
-      <div class="page-cta">
-        <p>
-          Try the free prototype — no login required, no personal data collected
-        </p>
-        <div class="game-links">
-          <a href="game-1/" class="btn-game">Game 1 &rarr;</a>
-          <a href="calibration/" class="btn-game">Color Calibration &rarr;</a>
+      <section class="content-section">
+        <div class="research-callout">
+          <div class="research-callout-label">Adult amblyopia research</div>
+          <p class="research-callout-body">Emerging evidence suggests adult amblyopia may be more treatable than once thought. Adults using this platform can optionally contribute anonymous activity data to ongoing research into binocular training patterns and adherence.</p>
+          <a href="/adult-amblyopia-research.html" class="research-callout-link">Learn about participation &rarr;</a>
         </div>
-      </div>
+      </section>
+
+      <section class="content-section">
+        <div class="disclaimer-box">
+          <div class="disclaimer-label">Important information</div>
+          <p>Amblyopia.games is intended to support therapy tracking and visual exercises. It is not a substitute for professional medical advice, diagnosis, or treatment.</p>
+          <p>Some exercises may not be appropriate for every type of amblyopia. Consult an eye-care professional regarding treatment decisions.</p>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <h2 class="section-title">Learn more</h2>
+        <p class="learn-body">Interested in research, anonymous aggregate insights, or the science behind the platform?</p>
+        <a href="https://www.amblyopialabs.com" class="labs-link">Visit Amblyopia Labs →</a>
+        <p class="powered-by">Powered by Amblyopia Labs</p>
+        <div style="margin-top: 40px;">
+          <a href="/auth/?mode=signup" class="btn-primary">Start Free</a>
+        </div>
+      </section>
+
     </main>
   </body>
 </html>
