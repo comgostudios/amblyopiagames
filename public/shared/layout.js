@@ -15,42 +15,7 @@
 
   // ── Theme tokens ─────────────────────────────────────────────────────────
   const varStyle = document.createElement("style");
-  varStyle.textContent = isGames
-    ? `
-    :root {
-      --sl-header-bg:    #0a0e1a;
-      --sl-header-bd:    #1e2740;
-      --sl-logo:         #ffffff;
-      --sl-logo-accent:  #4fc3f7;
-      --sl-nav-link:     #8899bb;
-      --sl-nav-hover:    #e8eaf0;
-      --sl-btn-bg:       #4fc3f7;
-      --sl-btn-text:     #0a0e1a;
-      --sl-btn-hover:    #81d4fa;
-      --sl-ubtn-bd:      #1e2740;
-      --sl-ubtn-bd-h:    #2e4060;
-      --sl-ubtn-text:    #c5cfe8;
-      --sl-ubtn-text-h:  #e8eaf0;
-      --sl-avatar-bg:    #1e2740;
-      --sl-avatar-bd:    #2e4060;
-      --sl-avatar-text:  #4fc3f7;
-      --sl-drop-bg:      #0f1525;
-      --sl-drop-bd:      #1e2740;
-      --sl-drop-shadow:  0 8px 24px rgba(0,0,0,0.4);
-      --sl-drop-name:    #e8eaf0;
-      --sl-drop-email:   #5a6a80;
-      --sl-drop-role:    #4fc3f7;
-      --sl-drop-item:    #8899bb;
-      --sl-drop-item-h-bg:   #1a2540;
-      --sl-drop-item-h-text: #e8eaf0;
-      --sl-signout:      #f87171;
-      --sl-signout-h-bg: rgba(248,113,113,0.08);
-      --sl-footer-bd:    #1e2740;
-      --sl-footer-text:  #4a5a70;
-      --sl-footer-hover: #8899bb;
-    }
-  `
-    : `
+  varStyle.textContent = `
     :root {
       --sl-header-bg:    #f5f7fa;
       --sl-header-bd:    #e2e8f0;
