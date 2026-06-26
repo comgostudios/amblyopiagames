@@ -1,6 +1,6 @@
 (function () {
   const isGames = /^(www\.)?amblyopia\.games$/.test(location.hostname)
-    || location.pathname.startsWith('/games');
+    || location.hostname === 'localhost';
   const isAuthPage = location.pathname.startsWith("/auth");
 
   // ── Google Analytics ─────────────────────────────────────────────────────
@@ -203,6 +203,8 @@
     const user = raw ? JSON.parse(raw) : null;
     const token = localStorage.getItem("al_token");
 
+    const authOrigin = isGames ? "https://www.amblyopialabs.com" : "";
+
     if (user && token) {
       const nameParts = [user.firstName, user.lastName].filter(Boolean);
       const displayName = nameParts.length ? nameParts.join(" ") : user.email;
@@ -227,23 +229,19 @@
               <div class="sl-dropdown-email">${user.email}</div>
               <span class="sl-dropdown-role">${user.role || ""}</span>
             </div>
-            <a href="/account/" class="sl-dropdown-item">My account</a>
+            <a href="${authOrigin}/account/" class="sl-dropdown-item">My account</a>
             <button class="sl-dropdown-item sl-signout" onclick="slSignOut()">Sign out</button>
           </div>
         </div>
       `;
     }
 
-    if (isGames) {
-      return `<a href="https://www.amblyopialabs.com" class="sl-nav-link">AmblyopiaLabs</a>`;
-    }
-
     if (isAuthPage) return "";
 
     const returnTo = encodeURIComponent(location.href);
     return `
-      <a href="/auth/?mode=signin&returnTo=${returnTo}">Sign in</a>
-      <a href="/auth/?mode=signup&returnTo=${returnTo}" class="sl-primary">Sign up</a>
+      <a href="${authOrigin}/auth/?mode=signin&returnTo=${returnTo}">Sign in</a>
+      <a href="${authOrigin}/auth/?mode=signup&returnTo=${returnTo}" class="sl-primary">Sign up</a>
     `;
   }
 

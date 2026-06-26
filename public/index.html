@@ -3,74 +3,135 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AmblyopiaLabs — Research Platform</title>
-    <link rel="stylesheet" href="/shared/styles.css" />
-    <script src="/shared/layout.js" defer></script>
+    <title>Amblyopia.games</title>
+    <link rel="stylesheet" href="shared/styles.css" />
+    <script src="shared/layout.js" defer></script>
   </head>
   <body>
     <div class="hero">
-      <h1 class="hero-title">Amblyopia<span>Labs</span></h1>
+      <h1 class="hero-title">Amblyopia<span>.games</span></h1>
       <p class="hero-tagline">
-        A browser-based research platform for dichoptic amblyopia therapy.
+        Browser-based dichoptic therapy games for research purposes
       </p>
     </div>
 
     <main class="page-content">
-      <section class="content-section">
-        <h2 class="section-heading">The problem</h2>
-        <p>
-          Amblyopia — commonly known as lazy eye — affects roughly
-          <strong>3% of the population</strong> and develops when the brain
-          begins to favour one eye over the other during early visual
-          development. Left untreated, it causes permanent reduction in visual
-          acuity in the weaker eye.
-        </p>
-        <p>
-          The standard treatment, occlusion patching of the stronger eye, has
-          changed little in decades. Compliance is poor — especially in children
-          — and the underlying suppression mechanism is not directly addressed.
-        </p>
-      </section>
+      <h2 class="section-heading">Why Amblyopia Games?</h2>
+      <p class="page-intro">
+        Promising research suggests that
+        <strong>dichoptic game-based therapy</strong>
+        — presenting different images to each eye simultaneously — may produce
+        stronger outcomes than traditional patching for amblyopia (lazy eye).
+        This project explores that approach in a browser, making it easy to
+        study and refine without any downloads or device lock-in.
+      </p>
 
-      <section class="content-section">
-        <h2 class="section-heading">The approach</h2>
-        <p>
-          Promising clinical research suggests that
-          <strong>dichoptic stimulation</strong> — presenting different visual
-          content to each eye simultaneously — may produce stronger and more
-          durable outcomes than patching alone. Rather than suppressing the
-          stronger eye, dichoptic therapy trains both eyes to cooperate,
-          targeting the binocular deficit at its source.
-        </p>
-        <p>
-          This platform implements that approach through browser-based games
-          using standard red-cyan anaglyph glasses. Running entirely in the
-          browser means no installations, no device lock-in, and low barriers to
-          participation — practical for both clinical research settings and
-          at-home use.
-        </p>
-      </section>
+      <div class="features">
+        <div>
+          <h2 class="feature-heading">Browser-based and accessible</h2>
+          <p class="feature-body">
+            Running entirely in the browser removes barriers to participation —
+            no app installs, no specialized hardware.
+            <strong>Any device with a screen and internet access</strong> is
+            enough to take part in a session.
+          </p>
+        </div>
 
-      <section class="content-section">
-        <h2 class="section-heading">Status</h2>
-        <p>
-          This is an <strong>early-stage research prototype</strong>, not a
-          validated clinical tool. The games are functional and playable.
-          Session outcomes are collected anonymously to inform ongoing
-          development. Results are exploratory.
-        </p>
-        <p>
-          Collaboration with optometrists, ophthalmologists, and vision
-          researchers is actively sought. If you work in this field and are
-          interested in evaluating the platform or contributing to the research
-          direction, feedback is welcome.
-        </p>
-      </section>
+        <div>
+          <h2 class="feature-heading">Dichoptic stimulation</h2>
+          <p class="feature-body">
+            Each game delivers
+            <strong>different visual input to each eye</strong>
+            simultaneously using anaglyph (red-cyan) glasses. This is the core
+            mechanism under investigation — training binocular cooperation
+            rather than suppressing the fellow eye as patching does.
+          </p>
+        </div>
 
-      <section class="content-section cta-section">
-        <p>Try the games — no login required, no personal data collected.</p>
-        <a href="/games/" class="btn-cta">Go to games &rarr;</a>
-      </section>
+        <div>
+          <h2 class="feature-heading">Controlled difficulty</h2>
+          <p class="feature-body">
+            Contrast, speed, and task complexity can be adjusted per session.
+            Keeping the weaker eye
+            <strong
+              >consistently challenged without inducing suppression</strong
+            >
+            is a key variable the research aims to understand better.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="feature-heading">Lightweight data collection</h2>
+          <p class="feature-body">
+            Session outcomes — score, duration, and difficulty level — are
+            logged to support analysis.
+            <strong>No personal data is collected</strong>; the focus is on
+            aggregate performance trends across sessions.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="feature-heading">Early stage</h2>
+          <p class="feature-body">
+            This is a research prototype, not a clinical tool. Results are
+            exploratory. <strong>Feedback from participants</strong> and
+            collaborating clinicians will actively shape the direction of the
+            work.
+          </p>
+        </div>
+      </div>
+
+      <h2 class="section-heading">What you will need</h2>
+      <div class="setup-steps">
+        <div class="setup-step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h3>A professional recommendation</h3>
+            <p>
+              Dichoptic therapy is not suitable for everyone with amblyopia.
+              <strong>An optometrist or ophthalmologist can confirm</strong>
+              whether binocular stimulation is appropriate for your case and
+              advise on session frequency and duration.
+            </p>
+          </div>
+        </div>
+
+        <div class="setup-step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h3>Red-cyan anaglyph glasses</h3>
+            <p>
+              The games use color filtering to send different images to each
+              eye. Standard <strong>red-cyan 3D glasses</strong> — the kind used
+              for old-style 3D movies — work perfectly and are widely available
+              online for a few dollars.
+            </p>
+          </div>
+        </div>
+
+        <div class="setup-step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h3>Create a free account</h3>
+            <p>
+              Creating an account lets you (and your clinician, if applicable)
+              track session history over time.
+              <strong>Progress — or lack of it — is useful data.</strong>
+              No payment or personal health information is required to sign up.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-cta">
+        <p>
+          Try the free prototype — no login required, no personal data collected
+        </p>
+        <div class="game-links">
+          <a href="game-1/" class="btn-game">Game 1 &rarr;</a>
+          <a href="calibration/" class="btn-game">Color Calibration &rarr;</a>
+        </div>
+      </div>
     </main>
   </body>
 </html>

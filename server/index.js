@@ -31,7 +31,7 @@ app.post('/api/account/email/verify', authLimiter, requireAuth, verifyEmailChang
 
 app.use((req, res, next) => {
   const host = (req.headers.host || '').split(':')[0];
-  if (!GAMES_HOSTS.includes(host) && req.path.startsWith('/games')) {
+  if (!GAMES_HOSTS.includes(host) && host !== 'localhost' && req.path.startsWith('/games')) {
     const rest = req.path.slice('/games'.length) || '/';
     return res.redirect(301, 'https://www.amblyopia.games' + rest);
   }
