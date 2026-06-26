@@ -1,5 +1,6 @@
 (function () {
-  const isGames = /^(www\.)?amblyopia\.games$/.test(location.hostname);
+  const isGames = /^(www\.)?amblyopia\.games$/.test(location.hostname)
+    || location.pathname.startsWith('/games');
   const isAuthPage = location.pathname.startsWith("/auth");
 
   // ── Google Analytics ─────────────────────────────────────────────────────

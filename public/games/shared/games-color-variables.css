@@ -1,0 +1,19 @@
+:root {
+  --game-red: #c12020;
+  --game-cyan: #167b7b;
+  --game-bg: #333;
+}
+
+.game-bg-color-container {
+  background-color: var(--game-bg);
+  padding: 64px 86px;
+  border-radius: 12px;
+}
+
+.bg-brightness-slider {
+  display: block;
+  width: 100%;
+  margin-top: 32px;
+  cursor: pointer;
+  accent-color: #888;
+}

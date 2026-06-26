@@ -182,13 +182,140 @@ body {
   background: #81d4fa;
 }
 
-/* ── Calibration Page ────────────────────────────────────── */
-.calibration-page {
-  background: #333;
+/* ── Calibration Sign-In Form ────────────────────────────── */
+.cal-auth {
+  width: 100%;
+  max-width: 360px;
+}
+
+.cal-auth-step {
+  display: none;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
+.cal-auth-step.active {
+  display: flex;
+}
+
+.cal-form-field {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cal-form-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #8899bb;
   font-family: sans-serif;
+}
+
+.cal-text-input {
+  width: 100%;
+  padding: 10px 14px;
+  background: #1e2740;
+  border: 1px solid #2e3f60;
+  border-radius: 6px;
+  color: #e8eaf0;
+  font-family: sans-serif;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.cal-text-input:focus {
+  border-color: #4fc3f7;
+}
+
+.cal-btn-submit {
+  width: 100%;
+  padding: 12px;
+  background: #4fc3f7;
+  color: #0a0e1a;
+  border: none;
+  border-radius: 6px;
+  font-family: sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.cal-btn-submit:hover:not(:disabled) {
+  background: #81d4fa;
+}
+
+.cal-btn-submit:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.cal-form-error {
+  font-size: 0.85rem;
+  color: #ff6b6b;
+  min-height: 1.2em;
+  text-align: center;
+  font-family: sans-serif;
+}
+
+.cal-otp-group {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.cal-otp-digit {
+  width: 44px;
+  height: 52px;
+  text-align: center;
+  font-size: 1.4rem;
+  font-family: sans-serif;
+  background: #1e2740;
+  border: 1px solid #2e3f60;
+  border-radius: 6px;
+  color: #e8eaf0;
+  outline: none;
+}
+
+.cal-otp-digit:focus {
+  border-color: #4fc3f7;
+}
+
+.cal-back-btn {
+  background: none;
+  border: none;
+  color: #4fc3f7;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  font-family: sans-serif;
+}
+
+.cal-back-btn:hover {
+  color: #81d4fa;
+}
+
+/* ── Calibration Page ────────────────────────────────────── */
+.calibration-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 32px;
+  font-family: sans-serif;
+}
+
+.calibration-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 48px;
+  gap: 40px;
+  padding: 24px;
 }
 
 .calibration-title {
@@ -202,13 +329,15 @@ body {
   font-size: 0.9rem;
   color: #8899bb;
   text-align: center;
-  max-width: 440px;
+  max-width: 420px;
+  line-height: 1.6;
 }
 
 .color-swatches {
   display: flex;
-  gap: 48px;
-  align-items: flex-start;
+  width: 60%;
+  justify-content: space-between;
+  margin: 64px auto;
 }
 
 .color-swatch {
@@ -219,14 +348,17 @@ body {
 }
 
 .swatch-box {
-  width: 64px;
-  height: 64px;
+  width: 80px;
+  height: 80px;
+  border-radius: 4px;
+  /* border: solid 2px #ccc; */
 }
 
 .swatch-label {
   font-size: 0.85rem;
   color: #8899bb;
   text-align: center;
+  line-height: 1.5;
 }
 
 .back-nav {
