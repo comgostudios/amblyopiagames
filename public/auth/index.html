@@ -243,7 +243,7 @@
 
           const params = new URLSearchParams(location.search);
           const returnTo = params.get('returnTo');
-          const dest = returnTo ? decodeURIComponent(returnTo) : 'https://www.amblyopialabs.com';
+          const dest = returnTo ? decodeURIComponent(returnTo) : '/';
           setTimeout(() => { window.location.href = dest; }, 1800);
         } catch (err) {
           setError('otp-error', err.message);

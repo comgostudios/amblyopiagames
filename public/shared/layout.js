@@ -168,7 +168,7 @@
     const user = raw ? JSON.parse(raw) : null;
     const token = localStorage.getItem("al_token");
 
-    const authOrigin = isGames ? "https://www.amblyopialabs.com" : "";
+    const authOrigin = "";
 
     if (user && token) {
       const nameParts = [user.firstName, user.lastName].filter(Boolean);
