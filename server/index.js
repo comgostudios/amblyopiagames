@@ -30,11 +30,17 @@ app.patch('/api/account', requireAuth, updateAccount);
 app.post('/api/account/email/request', authLimiter, requireAuth, requestEmailChange);
 app.post('/api/account/email/verify', authLimiter, requireAuth, verifyEmailChange);
 
+const GAMES_HOSTS = ['amblyopia.games', 'www.amblyopia.games'];
+
 app.use((req, res, next) => {
   const host = (req.headers.host || '').split(':')[0];
-  if (!LABS_HOSTS.includes(host) && /^\/labs(\/|$)/.test(req.path)) {
+  if (GAMES_HOSTS.includes(host) && /^\/labs(\/|$)/.test(req.path)) {
     const rest = req.path.replace(/^\/labs/, '') || '/';
-    return res.redirect(301, `https://www.amblyopialabs.com${rest}`);
+    return res.redirect(302, `https://www.amblyopialabs.com${rest}`);
+  }
+  if (LABS_HOSTS.includes(host) && /^\/games(\/|$)/.test(req.path)) {
+    const rest = req.path.replace(/^\/games/, '') || '/';
+    return res.redirect(302, `https://www.amblyopia.games/games${rest}`);
   }
   next();
 });
