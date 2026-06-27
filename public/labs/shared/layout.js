@@ -1,6 +1,7 @@
 (function () {
-  const isLabs = /^(www\.)?amblyopialabs\.com$/.test(location.hostname)
-    || location.pathname.startsWith('/labs');
+  const isLabs =
+    /^(www\.)?amblyopialabs\.com$/.test(location.hostname) ||
+    location.pathname.startsWith("/labs");
   const isAuthPage = location.pathname.startsWith("/auth");
 
   // ── Google Analytics ─────────────────────────────────────────────────────
@@ -229,7 +230,7 @@
               <div class="sl-dropdown-email">${user.email}</div>
               <span class="sl-dropdown-role">${user.role || ""}</span>
             </div>
-            <a href="${authOrigin}/account/" class="sl-dropdown-item">My account</a>
+            <a href="/account/" class="sl-dropdown-item">My account</a>
             <button class="sl-dropdown-item sl-signout" onclick="slSignOut()">Sign out</button>
           </div>
         </div>
