@@ -9,29 +9,43 @@
     <link rel="stylesheet" href="shared/styles.css" />
     <script src="shared/layout.js" defer></script>
     <style>
+      .hero-banner {
+        background: linear-gradient(160deg, #f0f9ff 0%, #e8f4fd 100%);
+        border-bottom: 1px solid #bae6fd;
+      }
       .hero {
-        padding: 72px 32px 60px;
+        padding: 88px 32px 80px;
+        border-bottom: none;
+      }
+      .hero-eyebrow {
+        display: inline-block;
+        font-family: sans-serif;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.8px;
+        color: #0369a1;
+        background: rgba(3, 105, 161, 0.08);
+        border: 1px solid rgba(3, 105, 161, 0.2);
+        border-radius: 20px;
+        padding: 5px 14px;
+        margin-bottom: 28px;
       }
       .hero-headline {
-        font-size: 2.6rem;
+        font-size: 3.2rem;
         font-weight: normal;
         color: #1e293b;
-        letter-spacing: -0.5px;
-        line-height: 1.25;
-        margin-bottom: 20px;
+        letter-spacing: -0.8px;
+        line-height: 1.2;
+        margin-bottom: 24px;
         max-width: 680px;
       }
       .hero-sub {
         font-size: 1.1rem;
-        color: #334155;
-        max-width: 580px;
-        margin-bottom: 10px;
-      }
-      .hero-desc {
-        font-size: 0.95rem;
-        color: #64748b;
-        max-width: 580px;
+        color: #475569;
+        max-width: 560px;
         margin-bottom: 36px;
+        line-height: 1.65;
       }
       .hero-ctas {
         display: flex;
@@ -318,26 +332,26 @@
     </style>
   </head>
   <body>
-    <div class="hero">
-      <h1 class="hero-headline">
-        Track therapy.<br />Train vision.<br />Monitor progress.
-      </h1>
-      <p class="hero-sub">
-        Interactive amblyopia exercises and treatment tracking for patients,
-        parents, and clinicians.
-      </p>
-      <p class="hero-desc">
-        Combine patching routines, dichoptic training games, and progress
-        monitoring in one browser-based platform — no downloads required.
-      </p>
-      <div class="hero-ctas">
-        <a href="/auth/?mode=signup" class="btn-primary">Start Free</a>
-        <a href="#how-it-works" class="btn-outline">How it Works</a>
+    <div class="hero-banner">
+      <div class="hero">
+        <div class="hero-eyebrow">Browser-based amblyopia platform</div>
+        <h1 class="hero-headline">
+          Track therapy.<br />Train vision.<br />Monitor progress.
+        </h1>
+        <p class="hero-sub">
+          Patching routines, dichoptic training games, and progress monitoring
+          in one place — for patients, parents, and clinicians. No downloads
+          required.
+        </p>
+        <div class="hero-ctas">
+          <a href="/auth/" class="btn-primary">Start Now</a>
+          <a href="#how-it-works" class="btn-outline">How it Works</a>
+        </div>
+        <p class="hero-trust">
+          Trusted by patients, families, and clinicians exploring modern
+          approaches to amblyopia care.
+        </p>
       </div>
-      <p class="hero-trust">
-        Trusted by patients, families, and clinicians exploring modern
-        approaches to amblyopia care.
-      </p>
     </div>
 
     <main class="page-content">
@@ -458,6 +472,9 @@
             </p>
           </div>
         </div>
+        <div style="margin-top: 36px;">
+          <a href="/games/" class="btn-game">Go to games &rarr;</a>
+        </div>
       </section>
 
       <section class="content-section">
@@ -510,7 +527,7 @@
         <a href="labs/" class="labs-link">Visit Amblyopia Labs →</a>
         <p class="powered-by">Powered by Amblyopia Labs</p>
         <div style="margin-top: 40px">
-          <a href="/auth/?mode=signup" class="btn-primary">Start Free</a>
+          <a href="/auth/" class="btn-primary">Start Now</a>
         </div>
       </section>
     </main>

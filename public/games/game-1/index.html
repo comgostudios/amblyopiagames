@@ -16,7 +16,6 @@
       body {
         background: #555;
         overflow: hidden;
-        cursor: none;
       }
       canvas {
         display: block;
@@ -35,7 +34,13 @@
     <script>
       // roundRect polyfill for iOS Safari < 15.4
       if (!CanvasRenderingContext2D.prototype.roundRect) {
-        CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
+        CanvasRenderingContext2D.prototype.roundRect = function (
+          x,
+          y,
+          w,
+          h,
+          r,
+        ) {
           r = typeof r === "number" ? r : Array.isArray(r) ? r[0] : 0;
           r = Math.min(r, w / 2, h / 2);
           this.moveTo(x + r, y);
@@ -77,17 +82,91 @@
       const mouse = { x: -100, y: -100 };
       const ball = { x: 0, y: 0, vx: 0, vy: 0 };
 
+      let gameBg = "#000";
+      const gameToken = localStorage.getItem("al_token");
+      let sessionId = null;
+      let userStats = null;
+      let sessionMethod = null;
+      let selectedMethod = localStorage.getItem("al_game_method") || null;
+
+      function formatDuration(sec) {
+        if (!sec) return "0m";
+        if (sec < 3600) return `${Math.floor(sec / 60)}m`;
+        return `${Math.floor(sec / 3600)}h ${Math.floor((sec % 3600) / 60)}m`;
+      }
+
+      async function startSession() {
+        if (!gameToken) return;
+        try {
+          const res = await fetch("/api/sessions", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${gameToken}` },
+            body: JSON.stringify({ gameId: "game-1", method: sessionMethod }),
+          });
+          if (!res.ok) return;
+          sessionId = (await res.json()).sessionId;
+        } catch {}
+      }
+
+      async function endSession(finalScore, completed) {
+        if (!sessionId) return;
+        const id = sessionId;
+        sessionId = null;
+        try {
+          await fetch(`/api/sessions/${id}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${gameToken}` },
+            body: JSON.stringify({ score: finalScore, completed }),
+          });
+          fetchStats();
+        } catch {}
+      }
+
+      async function fetchStats() {
+        if (!gameToken) return;
+        try {
+          const res = await fetch("/api/sessions/stats?gameId=game-1", {
+            headers: { Authorization: `Bearer ${gameToken}` },
+          });
+          if (res.ok) userStats = await res.json();
+        } catch {}
+      }
+
+      (async () => {
+        if (!gameToken) return;
+        try {
+          const [acctRes] = await Promise.all([
+            fetch("/api/account", { headers: { Authorization: `Bearer ${gameToken}` } }),
+            fetchStats(),
+          ]);
+          if (acctRes.ok) {
+            const data = await acctRes.json();
+            if (data.calibrationBg) {
+              gameBg = data.calibrationBg;
+              document.body.style.background = gameBg;
+            }
+          }
+        } catch {}
+      })();
+
       // 'intro' | 'playing' | 'gameover'
       let state = "intro";
       let showCursor = true;
       let score = 0;
       let lastTime = null;
       let opacity = 1;
-      let overlayOpacity = 1;
+      let bgR = 0, bgG = 0, bgB = 0;
+
+      function parseBg(hex) {
+        const h = hex.replace("#", "");
+        const f = h.length === 3 ? h.split("").map(c => c + c).join("") : h;
+        bgR = parseInt(f.slice(0, 2), 16);
+        bgG = parseInt(f.slice(2, 4), 16);
+        bgB = parseInt(f.slice(4, 6), 16);
+      }
 
       // Cursor toggle button rect, set each draw frame
       const toggleBtn = { x: 0, y: 0, w: 220, h: 44 };
-
 
       function resetBall() {
         ball.x = W() / 2;
@@ -96,11 +175,18 @@
         ball.vx = (W() / CROSS_SECONDS) * 0.4 * (Math.random() < 0.5 ? 1 : -1);
       }
 
+      function selectMethod(method) {
+        selectedMethod = method;
+        localStorage.setItem("al_game_method", method);
+      }
+
       function startGame() {
+        if (!selectedMethod) return;
+        sessionMethod = selectedMethod;
         state = "playing";
         score = 0;
         opacity = 1;
-        overlayOpacity = 1;
+        parseBg(gameBg);
         paddle.x = W() / 2 - PADDLE_WIDTH / 2;
         paddle.y = H() - 64;
         paddle.vx = 0;
@@ -109,6 +195,7 @@
         resetBall();
         paused = false;
         if (!showCursor && !isTouchDevice()) canvas.requestPointerLock();
+        startSession();
       }
 
       // Mouse control
@@ -124,36 +211,63 @@
       });
 
       // Touch control
-      canvas.addEventListener("touchstart", (e) => {
-        e.preventDefault();
-        const t = e.touches[0];
-        mouse.x = t.clientX;
-        mouse.y = t.clientY;
-        if (state === "intro") {
-          startGame();
-        } else if (state === "playing") {
-          paddle.x = t.clientX - PADDLE_WIDTH / 2;
-        } else if (state === "gameover") {
-          const x = t.clientX, y = t.clientY;
-          if (x >= homeBtn.x && x <= homeBtn.x + homeBtn.w &&
-              y >= homeBtn.y && y <= homeBtn.y + homeBtn.h) {
-            window.location.href = "/games/";
-          } else if (x >= calibBtn.x && x <= calibBtn.x + calibBtn.w &&
-                     y >= calibBtn.y && y <= calibBtn.y + calibBtn.h) {
-            window.location.href = "/games/calibration/";
-          } else {
-            state = "intro";
+      canvas.addEventListener(
+        "touchstart",
+        (e) => {
+          e.preventDefault();
+          const t = e.touches[0];
+          mouse.x = t.clientX;
+          mouse.y = t.clientY;
+          if (state === "intro") {
+            const tx = t.clientX, ty = t.clientY;
+            const hit = (b) => tx >= b.x && tx <= b.x + b.w && ty >= b.y && ty <= b.y + b.h;
+            if (hit(introGamesLink)) {
+              window.location.href = "/games/";
+            } else if (hit(patchBtn)) {
+              selectMethod("patching");
+            } else if (hit(glassesBtn)) {
+              selectMethod("glasses");
+            } else if (hit(startBtn)) {
+              startGame();
+            }
+          } else if (state === "playing") {
+            paddle.x = t.clientX - PADDLE_WIDTH / 2;
+          } else if (state === "gameover") {
+            const x = t.clientX,
+              y = t.clientY;
+            if (
+              x >= homeBtn.x &&
+              x <= homeBtn.x + homeBtn.w &&
+              y >= homeBtn.y &&
+              y <= homeBtn.y + homeBtn.h
+            ) {
+              window.location.href = "/games/";
+            } else if (
+              x >= calibBtn.x &&
+              x <= calibBtn.x + calibBtn.w &&
+              y >= calibBtn.y &&
+              y <= calibBtn.y + calibBtn.h
+            ) {
+              window.location.href = "/calibration/";
+            } else {
+              state = "intro";
+            }
           }
-        }
-      }, { passive: false });
+        },
+        { passive: false },
+      );
 
-      canvas.addEventListener("touchmove", (e) => {
-        e.preventDefault();
-        const t = e.touches[0];
-        mouse.x = t.clientX;
-        mouse.y = t.clientY;
-        if (state === "playing") paddle.x = t.clientX - PADDLE_WIDTH / 2;
-      }, { passive: false });
+      canvas.addEventListener(
+        "touchmove",
+        (e) => {
+          e.preventDefault();
+          const t = e.touches[0];
+          mouse.x = t.clientX;
+          mouse.y = t.clientY;
+          if (state === "playing") paddle.x = t.clientX - PADDLE_WIDTH / 2;
+        },
+        { passive: false },
+      );
 
       // Keyboard control
       const keys = new Set();
@@ -167,7 +281,6 @@
         keys.add(e.key);
         if (ARROW_KEYS.has(e.key)) e.preventDefault();
         if (state === "gameover") state = "intro";
-        else if (state === "intro") startGame();
       });
       window.addEventListener("keyup", (e) => keys.delete(e.key));
 
@@ -181,7 +294,9 @@
 
       let paused = false;
       let lastTouchEnd = 0;
-      canvas.addEventListener("touchend", () => { lastTouchEnd = Date.now(); });
+      canvas.addEventListener("touchend", () => {
+        lastTouchEnd = Date.now();
+      });
 
       canvas.addEventListener("click", (e) => {
         if (Date.now() - lastTouchEnd < 500) return;
@@ -190,28 +305,34 @@
           return;
         }
         if (state === "intro") {
-          // Check if cursor toggle was clicked
-          if (
-            e.clientX >= toggleBtn.x &&
-            e.clientX <= toggleBtn.x + toggleBtn.w &&
-            e.clientY >= toggleBtn.y &&
-            e.clientY <= toggleBtn.y + toggleBtn.h
-          ) {
-            showCursor = !showCursor;
-          } else {
+          const cx = e.clientX, cy = e.clientY;
+          const hit = (b) => cx >= b.x && cx <= b.x + b.w && cy >= b.y && cy <= b.y + b.h;
+          if (hit(introGamesLink)) {
+            window.location.href = "/games/";
+          } else if (hit(patchBtn)) {
+            selectMethod("patching");
+          } else if (hit(glassesBtn)) {
+            selectMethod("glasses");
+          } else if (hit(startBtn)) {
             startGame();
+          } else if (hit(toggleBtn)) {
+            showCursor = !showCursor;
           }
         } else if (state === "gameover") {
           if (
-            e.clientX >= homeBtn.x && e.clientX <= homeBtn.x + homeBtn.w &&
-            e.clientY >= homeBtn.y && e.clientY <= homeBtn.y + homeBtn.h
+            e.clientX >= homeBtn.x &&
+            e.clientX <= homeBtn.x + homeBtn.w &&
+            e.clientY >= homeBtn.y &&
+            e.clientY <= homeBtn.y + homeBtn.h
           ) {
             window.location.href = "/games/";
           } else if (
-            e.clientX >= calibBtn.x && e.clientX <= calibBtn.x + calibBtn.w &&
-            e.clientY >= calibBtn.y && e.clientY <= calibBtn.y + calibBtn.h
+            e.clientX >= calibBtn.x &&
+            e.clientX <= calibBtn.x + calibBtn.w &&
+            e.clientY >= calibBtn.y &&
+            e.clientY <= calibBtn.y + calibBtn.h
           ) {
-            window.location.href = "/games/calibration/";
+            window.location.href = "/calibration/";
           } else {
             state = "intro";
           }
@@ -270,7 +391,6 @@
             const hitPos = (ball.x - paddle.x) / PADDLE_WIDTH;
             ball.vx = (hitPos - 0.5) * 2 * (W() / CROSS_SECONDS) * 0.6;
             opacity = Math.max(0, opacity - 0.01);
-            overlayOpacity = Math.max(0, overlayOpacity - 0.01);
             score++;
           }
         }
@@ -278,6 +398,7 @@
         if (ball.y - BALL_RADIUS > H()) {
           state = "gameover";
           if (document.exitPointerLock) document.exitPointerLock();
+          endSession(score, true);
         }
       }
 
@@ -293,7 +414,7 @@
         ctx.setLineDash(DASH_OFF);
 
         // Paddle
-        ctx.fillStyle = `rgb(${Math.round(22*opacity)},${Math.round(123*opacity)},${Math.round(123*opacity)})`;
+        ctx.fillStyle = `rgb(${Math.round(22 * opacity)},${Math.round(123 * opacity)},${Math.round(123 * opacity)})`;
         ctx.beginPath();
         ctx.roundRect(paddle.x, paddle.y, PADDLE_WIDTH, PADDLE_HEIGHT, 4);
         ctx.fill();
@@ -329,6 +450,93 @@
           ctx.fillStyle = "rgba(255,255,255,0.6)";
           ctx.fillText("Click to continue", W() / 2, H() / 2 + 40);
         }
+      }
+
+      function drawMethodBtn(btn, label, iconFn, selected) {
+        ctx.fillStyle = selected ? "rgba(255,255,255,0.11)" : "rgba(255,255,255,0.07)";
+        ctx.beginPath();
+        ctx.roundRect(btn.x, btn.y, btn.w, btn.h, 10);
+        ctx.fill();
+        ctx.strokeStyle = selected ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.18)";
+        ctx.lineWidth = selected ? 2.5 : 1;
+        ctx.stroke();
+        iconFn(btn.x + btn.w / 2, btn.y + 46);
+        ctx.fillStyle = "rgba(255,255,255,0.65)";
+        ctx.font = "13px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(label, btn.x + btn.w / 2, btn.y + btn.h - 12);
+      }
+
+      function drawPatchIcon(cx, cy) {
+        // Eye outline (faint, behind the patch)
+        ctx.strokeStyle = "rgba(255,255,255,0.2)";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, 22, 14, 0, 0, Math.PI * 2);
+        ctx.stroke();
+        // Patch body
+        ctx.fillStyle = "rgba(190,150,90,0.9)";
+        ctx.beginPath();
+        ctx.roundRect(cx - 26, cy - 18, 52, 36, 6);
+        ctx.fill();
+        ctx.strokeStyle = "rgba(210,170,100,0.8)";
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        // Strap lines
+        ctx.strokeStyle = "rgba(210,170,100,0.55)";
+        ctx.lineWidth = 2;
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        ctx.moveTo(cx - 26, cy - 4);
+        ctx.lineTo(cx - 40, cy - 12);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(cx + 26, cy - 4);
+        ctx.lineTo(cx + 40, cy - 12);
+        ctx.stroke();
+        ctx.lineCap = "butt";
+      }
+
+      function drawGlassesIcon(cx, cy) {
+        const lRx = 19, lRy = 13, bridge = 8;
+        const lx = cx - lRx - bridge / 2;
+        const rx = cx + lRx + bridge / 2;
+        // Temple arms
+        ctx.strokeStyle = "rgba(255,255,255,0.45)";
+        ctx.lineWidth = 2;
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        ctx.moveTo(lx - lRx, cy);
+        ctx.lineTo(lx - lRx - 14, cy);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(rx + lRx, cy);
+        ctx.lineTo(rx + lRx + 14, cy);
+        ctx.stroke();
+        // Left lens — red
+        ctx.fillStyle = "rgba(220,55,55,0.25)";
+        ctx.beginPath();
+        ctx.ellipse(lx, cy, lRx, lRy, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = "#d44";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        // Right lens — cyan
+        ctx.fillStyle = "rgba(30,160,160,0.25)";
+        ctx.beginPath();
+        ctx.ellipse(rx, cy, lRx, lRy, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = "#4bb";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        // Bridge
+        ctx.strokeStyle = "rgba(255,255,255,0.55)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(lx + lRx, cy);
+        ctx.lineTo(rx - lRx, cy);
+        ctx.stroke();
+        ctx.lineCap = "butt";
       }
 
       function drawIntro() {
@@ -381,7 +589,9 @@
 
           // Switch knob
           const knobR = radius - 3;
-          const knobX = showCursor ? trackX + radius : trackX + switchW - radius;
+          const knobX = showCursor
+            ? trackX + radius
+            : trackX + switchW - radius;
           ctx.fillStyle = showCursor ? "#fff" : "#ddd";
           ctx.beginPath();
           ctx.arc(knobX, rowY, knobR, 0, Math.PI * 2);
@@ -393,17 +603,65 @@
           ctx.fillText(label, rowX + switchW + gap, rowY + 6);
         }
 
-        ctx.fillStyle = "rgba(255,255,255,0.7)";
-        ctx.font = "22px sans-serif";
+        ctx.fillStyle = "rgba(255,255,255,0.38)";
+        ctx.font = "15px sans-serif";
         ctx.textAlign = "center";
-        ctx.fillText(
-          isTouchDevice() ? "Tap anywhere to start" : "Click anywhere to start",
-          W() / 2, H() / 2 + 90
-        );
+        ctx.fillText("Select how you're training:", W() / 2, H() / 2 + 54);
+
+        const btnGapM = 16;
+        const totalMW = patchBtn.w + btnGapM + glassesBtn.w;
+        const mBtnY = H() / 2 + 68;
+        patchBtn.x   = W() / 2 - totalMW / 2;
+        patchBtn.y   = mBtnY;
+        glassesBtn.x = patchBtn.x + patchBtn.w + btnGapM;
+        glassesBtn.y = mBtnY;
+        drawMethodBtn(patchBtn,   "Eye Patching", drawPatchIcon,   selectedMethod === "patching");
+        drawMethodBtn(glassesBtn, "3D Glasses",   drawGlassesIcon, selectedMethod === "glasses");
+
+        // Start Game button
+        const ready = selectedMethod !== null;
+        startBtn.x = W() / 2 - startBtn.w / 2;
+        startBtn.y = mBtnY + patchBtn.h + 18;
+        ctx.fillStyle = ready ? "rgba(255,255,255,0.92)" : "rgba(255,255,255,0.15)";
+        ctx.beginPath();
+        ctx.roundRect(startBtn.x, startBtn.y, startBtn.w, startBtn.h, 8);
+        ctx.fill();
+        ctx.fillStyle = ready ? "#111" : "rgba(255,255,255,0.3)";
+        ctx.font = "bold 15px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("Start Game", W() / 2, startBtn.y + 28);
+
+        if (userStats && userStats.totalSessions > 0) {
+          const parts = [];
+          if (userStats.bestScore !== null) parts.push(`Best: ${userStats.bestScore}`);
+          if (userStats.avgScore !== null) parts.push(`Avg: ${userStats.avgScore}`);
+          parts.push(`Sessions: ${userStats.totalSessions}`);
+          parts.push(`Time: ${formatDuration(userStats.totalDurationSec)}`);
+          ctx.fillStyle = "rgba(255,255,255,0.25)";
+          ctx.font = "14px sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText(parts.join("  ·  "), W() / 2, startBtn.y + startBtn.h + 26);
+        }
+
+        const linkLabel = "← Back to games";
+        ctx.font = "14px sans-serif";
+        const linkW = ctx.measureText(linkLabel).width;
+        const linkX = W() / 2 - linkW / 2;
+        const linkY = H() - 36;
+        introGamesLink.x = linkX - 8;
+        introGamesLink.y = linkY - 18;
+        introGamesLink.w = linkW + 16;
+        introGamesLink.h = 28;
+        ctx.fillStyle = "rgba(255,255,255,0.22)";
+        ctx.fillText(linkLabel, W() / 2, linkY);
       }
 
       const homeBtn = { x: 0, y: 0, w: 180, h: 40 };
       const calibBtn = { x: 0, y: 0, w: 180, h: 40 };
+      const introGamesLink = { x: 0, y: 0, w: 0, h: 0 };
+      const patchBtn   = { x: 0, y: 0, w: 155, h: 100 };
+      const glassesBtn = { x: 0, y: 0, w: 155, h: 100 };
+      const startBtn   = { x: 0, y: 0, w: 160, h: 44 };
 
       function drawGameOver() {
         ctx.fillStyle = "rgba(0,0,0,0.65)";
@@ -418,16 +676,36 @@
         ctx.fillStyle = "rgba(255,255,255,0.7)";
         ctx.fillText(`Score: ${score}`, W() / 2, H() / 2 + 20);
 
+        if (userStats) {
+          const isNewBest = userStats.bestScore === null || score > userStats.bestScore;
+          if (isNewBest && score > 0) {
+            ctx.font = "bold 16px sans-serif";
+            ctx.fillStyle = "#4ade80";
+            ctx.fillText("New best!", W() / 2, H() / 2 + 50);
+          } else if (userStats.bestScore !== null) {
+            ctx.font = "16px sans-serif";
+            ctx.fillStyle = "rgba(255,255,255,0.35)";
+            const parts = [`Best: ${userStats.bestScore}`];
+            if (userStats.avgScore !== null) parts.push(`Avg: ${userStats.avgScore}`);
+            parts.push(`Sessions: ${userStats.totalSessions}`);
+            ctx.fillText(parts.join("  ·  "), W() / 2, H() / 2 + 50);
+          }
+        }
+
         ctx.font = "20px sans-serif";
+        ctx.fillStyle = "rgba(255,255,255,0.5)";
         ctx.fillText(
-          isTouchDevice() ? "Tap to continue" : "Click or press any key to continue",
-          W() / 2, H() / 2 + 64
+          isTouchDevice()
+            ? "Tap to continue"
+            : "Click or press any key to continue",
+          W() / 2,
+          H() / 2 + 76,
         );
 
         // Buttons row
         const btnGap = 12;
         const totalW = homeBtn.w + btnGap + calibBtn.w;
-        const btnY = H() / 2 + 104;
+        const btnY = H() / 2 + 116;
         homeBtn.x = W() / 2 - totalW / 2;
         homeBtn.y = btnY;
         calibBtn.x = homeBtn.x + homeBtn.w + btnGap;
@@ -447,14 +725,19 @@
           ctx.fillText(label, btn.x + btn.w / 2, btn.y + 26);
         }
 
-        drawBtn(homeBtn, "← Homepage");
+        drawBtn(homeBtn, "← Games");
         drawBtn(calibBtn, "Color Calibration");
       }
 
       function draw() {
-        ctx.fillStyle = "#000";
-        ctx.fillRect(0, 0, W(), H());
-        ctx.fillStyle = `rgba(51,51,51,${overlayOpacity})`;
+        document.body.style.cursor = state === "playing" ? "none" : "default";
+
+        if (state === "playing" || state === "gameover") {
+          const t = Math.min(score, 100) / 100;
+          ctx.fillStyle = `rgb(${Math.round(bgR * (1 - t))},${Math.round(bgG * (1 - t))},${Math.round(bgB * (1 - t))})`;
+        } else {
+          ctx.fillStyle = gameBg;
+        }
         ctx.fillRect(0, 0, W(), H());
 
         if (state === "intro") {

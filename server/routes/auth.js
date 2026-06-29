@@ -16,6 +16,14 @@ async function uniqueClinicCode(db) {
   return code;
 }
 
+async function uniqueUserId(db) {
+  let id;
+  do {
+    id = String(Math.floor(10000000 + Math.random() * 90000000));
+  } while (await db.collection('users').findOne({ id }, { projection: { _id: 1 } }));
+  return id;
+}
+
 async function requestPasscode(req, res, next) {
   try {
     const { email, role } = req.body;
@@ -116,7 +124,7 @@ async function verifyPasscode(req, res, next) {
       // Sign-up: create user now that email is verified.
       // $setOnInsert holds immutable fields (email, createdAt, clinicCode).
       // $set holds fields that should also refresh on re-registration.
-      const onInsert = { email: emailLower, createdAt: now };
+      const onInsert = { email: emailLower, createdAt: now, id: await uniqueUserId(db) };
       if (otp.pendingRole === 'clinician') onInsert.clinicCode = await uniqueClinicCode(db);
 
       user = await db.collection('users').findOneAndUpdate(

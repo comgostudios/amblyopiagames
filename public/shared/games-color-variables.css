@@ -10,10 +10,44 @@
   border-radius: 12px;
 }
 
-.bg-brightness-slider {
+.cal-sliders {
+  width: 100%;
+  max-width: 420px;
+  margin-top: 32px;
+  display: grid;
+  gap: 14px;
+}
+
+.cal-slider-row {
+  display: grid;
+  grid-template-columns: 72px 1fr 32px;
+  align-items: center;
+  gap: 12px;
+}
+
+.cal-slider-label {
+  font-family: sans-serif;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.45);
+  text-align: right;
+}
+.cal-slider-label.r { color: #f87171; }
+.cal-slider-label.g { color: #4ade80; }
+.cal-slider-label.b { color: #60a5fa; }
+
+.cal-slider {
   display: block;
   width: 100%;
-  margin-top: 32px;
   cursor: pointer;
-  accent-color: #888;
+}
+.cal-slider.bg  { accent-color: #aaa; }
+.cal-slider.r   { accent-color: #f87171; }
+.cal-slider.g   { accent-color: #4ade80; }
+.cal-slider.b   { accent-color: #60a5fa; }
+
+.cal-slider-val {
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.3);
+  text-align: right;
 }
