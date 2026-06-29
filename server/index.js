@@ -5,6 +5,7 @@ const rateLimit = require('express-rate-limit');
 const { connectDB } = require('./db');
 const { requestPasscode, verifyPasscode } = require('./routes/auth');
 const { getAccount, updateAccount, requestEmailChange, verifyEmailChange } = require('./routes/account');
+const { startSession, endSession, getStats } = require('./routes/sessions');
 const requireAuth = require('./middleware/requireAuth');
 
 const PORT = process.env.PORT || 3000;
@@ -26,6 +27,9 @@ const authLimiter = rateLimit({
 app.post('/api/auth/request', authLimiter, requestPasscode);
 app.post('/api/auth/verify', authLimiter, verifyPasscode);
 app.get('/api/account', requireAuth, getAccount);
+app.get('/api/sessions/stats', requireAuth, getStats);
+app.post('/api/sessions', requireAuth, startSession);
+app.patch('/api/sessions/:id', requireAuth, endSession);
 app.patch('/api/account', requireAuth, updateAccount);
 app.post('/api/account/email/request', authLimiter, requireAuth, requestEmailChange);
 app.post('/api/account/email/verify', authLimiter, requireAuth, verifyEmailChange);

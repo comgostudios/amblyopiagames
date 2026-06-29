@@ -221,6 +221,39 @@ body {
   display: block;
 }
 
+.auth-mode-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  width: 100%;
+  padding: 18px 20px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.auth-mode-btn:hover {
+  border-color: #0369a1;
+  background: #f0f9ff;
+}
+
+.auth-mode-label {
+  font-family: sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.auth-mode-desc {
+  font-family: sans-serif;
+  font-size: 0.82rem;
+  color: #64748b;
+}
+
 /* ── Form Elements ───────────────────────────────────────── */
 .form-field {
   margin-bottom: 20px;

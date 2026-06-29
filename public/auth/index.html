@@ -11,6 +11,22 @@
     <main class="auth-wrap">
       <div class="auth-card">
 
+        <!-- Step 0: Mode picker -->
+        <div class="auth-step" id="step-mode">
+          <h1 class="auth-heading">Welcome</h1>
+          <p class="auth-subtitle">Sign in to your existing account or create a new one.</p>
+          <div style="display: grid; gap: 12px; margin-top: 32px;">
+            <button class="auth-mode-btn" onclick="chooseMode('signin')">
+              <span class="auth-mode-label">Sign in</span>
+              <span class="auth-mode-desc">I already have an account</span>
+            </button>
+            <button class="auth-mode-btn" onclick="chooseMode('signup')">
+              <span class="auth-mode-label">Sign up</span>
+              <span class="auth-mode-desc">Create a new account</span>
+            </button>
+          </div>
+        </div>
+
         <!-- Step 1: Email + Role -->
         <div class="auth-step active" id="step-email">
           <h1 class="auth-heading" id="page-title">Sign in</h1>
@@ -72,14 +88,33 @@
     </main>
 
     <script>
-      const mode = new URLSearchParams(location.search).get('mode');
-      const isSignUp = mode === 'signup';
+      let mode = new URLSearchParams(location.search).get('mode');
+      let isSignUp = mode === 'signup';
 
-      if (isSignUp) {
+      function chooseMode(chosen) {
+        mode = chosen;
+        isSignUp = chosen === 'signup';
+        if (isSignUp) {
+          document.getElementById('page-title').textContent = 'Sign up';
+          document.getElementById('page-subtitle').textContent = 'Create your account — we\'ll send a passcode to verify your email.';
+          document.getElementById('role-section').style.display = '';
+        } else {
+          document.getElementById('page-title').textContent = 'Sign in';
+          document.getElementById('page-subtitle').textContent = 'We\'ll send a one-time passcode to your email — no password needed.';
+          document.getElementById('role-section').style.display = 'none';
+        }
+        showStep('step-email');
+      }
+
+      if (!mode) {
+        showStep('step-mode');
+      } else if (isSignUp) {
         document.getElementById('page-title').textContent = 'Sign up';
         document.getElementById('page-subtitle').textContent = 'Create your account — we\'ll send a passcode to verify your email.';
+        showStep('step-email');
       } else {
         document.getElementById('role-section').style.display = 'none';
+        showStep('step-email');
       }
 
       let selectedRole = null;
